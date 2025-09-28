@@ -10,7 +10,9 @@ import HomePage from "./pages/HomePage";
 import TodayPage from "./pages/TodayPage";
 import UpcomingPage from "./pages/UpcomingPage";
 import LogbookPage from "./pages/LogbookPage";
-import projectService from "./services/projectService";
+import ProjectPage from "./pages/ProjectPage";
+import { projectService } from "./services/projectService";
+import { todoService } from "./services/todoService";
 import AddProjectForm from "./components/AddProjectForm";
 
 function Navigation() {
@@ -37,6 +39,34 @@ function Navigation() {
   const handleProjectAdded = (newProject) => {
     setProjects((prev) => [...prev, newProject]);
     setShowAddForm(false);
+  };
+
+  const handleTodoDrop = async (todoId, newProjectId) => {
+    try {
+      await todoService.updateTodo(todoId, { project_id: newProjectId });
+      // Force refresh of todos after project change
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating todo project:", error);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.currentTarget.classList.add("drag-over");
+  };
+
+  const handleDragLeave = (e) => {
+    e.currentTarget.classList.remove("drag-over");
+  };
+
+  const handleDrop = (e, projectId) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove("drag-over");
+    const todoId = parseInt(e.dataTransfer.getData("text/plain"));
+    if (todoId) {
+      handleTodoDrop(todoId, projectId);
+    }
   };
 
   return (
@@ -105,10 +135,20 @@ function Navigation() {
           ) : (
             <ul className="sidebar-projects">
               {projects.map((project) => (
-                <li key={project.id} className="sidebar-project-item">
-                  <span className="project-name" title={project.description}>
+                <li
+                  key={project.id}
+                  className="sidebar-project-item drop-zone"
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, project.id)}
+                >
+                  <Link
+                    to={`/project/${project.id}`}
+                    className="project-name project-link"
+                    title={project.description}
+                  >
                     {project.name}
-                  </span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -130,6 +170,7 @@ function App() {
             <Route path="/today" element={<TodayPage />} />
             <Route path="/upcoming" element={<UpcomingPage />} />
             <Route path="/logbook" element={<LogbookPage />} />
+            <Route path="/project/:projectId" element={<ProjectPage />} />
           </Routes>
         </div>
       </div>

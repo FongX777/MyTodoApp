@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import todoService from "../services/todoService";
 
-const AddTodoForm = () => {
+const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("low");
   const [description, setDescription] = useState("");
@@ -13,16 +13,25 @@ const AddTodoForm = () => {
 
     setIsSubmitting(true);
     try {
-      await todoService.createTodo({
+      const todoData = {
         title: title.trim(),
         priority,
         status: "pending",
         description: description.trim(),
-      });
+      };
+
+      // Add project_id if defaultProjectId is provided
+      if (defaultProjectId) {
+        todoData.project_id = defaultProjectId;
+      }
+
+      const response = await todoService.createTodo(todoData);
       setTitle("");
       setDescription("");
       setPriority("low");
-      // You might want to trigger a refresh of the todo list here
+      if (onTodoAdded) {
+        onTodoAdded(response.data);
+      }
     } catch (error) {
       console.error("Error creating todo:", error);
     } finally {
@@ -65,6 +74,7 @@ const AddTodoForm = () => {
           <option value="low">Low Priority</option>
           <option value="medium">Medium Priority</option>
           <option value="high">High Priority</option>
+          <option value="urgent">Urgent Priority</option>
         </select>
       </div>
 

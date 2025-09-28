@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import TodoList from "../components/TodoList";
 import AddTodoForm from "../components/AddTodoForm";
 
 const HomePage = () => {
+  const todoListRef = useRef();
+
+  const handleTodoAdded = (newTodo) => {
+    if (todoListRef.current && todoListRef.current.refreshTodos) {
+      todoListRef.current.refreshTodos();
+    }
+  };
+
   return (
     <>
       <div className="content-header">
@@ -10,8 +18,8 @@ const HomePage = () => {
         <p className="page-subtitle">Manage your tasks efficiently</p>
       </div>
       <div className="content-body">
-        <AddTodoForm />
-        <TodoList />
+        <AddTodoForm onTodoAdded={handleTodoAdded} />
+        <TodoList ref={todoListRef} />
       </div>
     </>
   );

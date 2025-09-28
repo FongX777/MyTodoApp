@@ -18,9 +18,17 @@ const updateTodo = (id, todo) => {
   return axios.put(`${API_URL}/todos/${id}`, todo);
 };
 
-export default {
+const deleteTodo = (id) => {
+  return axios.delete(`${API_URL}/todos/${id}`);
+};
+
+const todoService = {
   getTodos,
   createTodo,
   getTodo,
   updateTodo,
+  deleteTodo,
 };
+
+export default todoService;
+export { todoService };

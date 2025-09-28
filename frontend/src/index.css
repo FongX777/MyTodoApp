@@ -171,11 +171,12 @@ nav a::before {
 }
 
 .todo-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2d3748;
-  margin: 0 0 8px 0;
-  line-height: 1.4;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+  word-break: break-word !important;
 }
 
 .todo-meta {
@@ -205,6 +206,13 @@ nav a::before {
 .todo-priority {
   background: #fed7d7;
   color: #c53030;
+}
+
+.todo-priority.urgent {
+  background: #fed7d7;
+  color: #c53030;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(197, 48, 48, 0.2);
 }
 
 .todo-priority.high {
@@ -382,10 +390,10 @@ nav a::before {
 
 /* Todo Description */
 .todo-description {
-  font-size: 14px;
-  color: #718096;
-  margin: 8px 0 0 0;
-  line-height: 1.5;
+  font-size: 12px !important;
+  color: #718096 !important;
+  margin: 4px 0 0 0 !important;
+  line-height: 1.4 !important;
 }
 
 /* Empty States */
@@ -422,7 +430,7 @@ nav a::before {
 
 /* Hover effects for interactive elements */
 .todo-item:hover .todo-title {
-  color: #4299e1;
+  color: #4299e1 !important;
 }
 
 .project-item:hover .project-title {
@@ -657,7 +665,24 @@ nav a:focus {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* Project link styling */
+.project-link {
+  color: #1a1a1a;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: inherit;
+  margin: 0;
+}
+
+.project-link:hover {
+  color: #007AFF;
+}
+
+.project-link:visited {
+  color: #1a1a1a;
+}
   .app {
     flex-direction: column;
     margin: 0;
@@ -703,4 +728,443 @@ nav a:focus {
   .project-description-input {
     font-size: 16px; /* Prevents zoom on iOS */
   }
+
+/* Drag and Drop Styles */
+.drop-zone {
+  transition: all 0.2s ease;
+}
+
+.drop-zone:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.drop-zone.drag-over {
+  background: rgba(68, 193, 84, 0.1);
+  border-left: 3px solid #44c154;
+  transform: translateX(3px);
+}
+
+.todo-item.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+  cursor: grabbing;
+}
+
+/* Enhanced TodoItem Styles - Override existing styles */
+.todo-item {
+  display: block !important;
+  padding: 16px 20px !important;
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  margin-bottom: 8px !important;
+  cursor: grab !important;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  border: 1px solid #e2e8f0 !important;
+  position: relative !important;
+  overflow: visible !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04) !important;
+}
+
+.todo-content {
+  display: block;
+}
+
+.todo-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.todo-check-container {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.todo-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.todo-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  cursor: pointer;
+}
+
+.todo-checkbox:checked {
+  background: #34c759;
+  border-color: #34c759;
+}
+
+.todo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #718096;
+}
+
+.todo-project {
+  color: #718096;
+  font-size: 11px;
+}
+
+.todo-status {
+  color: #718096;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.todo-priority {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Edit form styles */
+.todo-item.editing {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.todo-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-title-input,
+.edit-description-input {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #2d3748;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.edit-title-input:focus,
+.edit-description-input:focus {
+  outline: none;
+  border-color: #007aff;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.edit-title-input::placeholder,
+.edit-description-input::placeholder {
+  color: #a0aec0;
+}
+
+.edit-description-input {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-row {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.edit-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edit-field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-select {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #2d3748;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.edit-select:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.btn-mini {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #007aff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056cc;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.todo-item::before {
+  display: none !important;
+}
+
+.todo-item:hover {
+  background: #f8fafc !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  border-color: #cbd5e0 !important;
+}
+
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 12px;
+}
+
+.todo-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #2d3748 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+  word-break: break-word !important;
+}
+
+.todo-title.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todo-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.todo-description {
+  font-size: 12px !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.todo-priority {
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.priority-high {
+  background: rgba(255, 69, 58, 0.2);
+  color: #ff453a;
+  border: 1px solid rgba(255, 69, 58, 0.3);
+}
+
+.priority-medium {
+  background: rgba(255, 159, 10, 0.2);
+  color: #ff9f0a;
+  border: 1px solid rgba(255, 159, 10, 0.3);
+}
+
+.priority-low {
+  background: rgba(52, 199, 89, 0.2);
+  color: #34c759;
+  border: 1px solid rgba(52, 199, 89, 0.3);
+}
+
+.todo-project {
+  font-size: 11px !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.todo-action-btn {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.todo-action-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.todo-action-btn.edit-btn:hover {
+  background: rgba(0, 122, 255, 0.3);
+  color: #007aff;
+}
+
+.todo-action-btn.delete-btn:hover {
+  background: rgba(255, 69, 58, 0.3);
+  color: #ff453a;
+}
+
+.todo-action-btn.save-btn {
+  background: rgba(52, 199, 89, 0.2);
+  color: #34c759;
+}
+
+.todo-action-btn.save-btn:hover {
+  background: rgba(52, 199, 89, 0.3);
+}
+
+.todo-action-btn.cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.todo-action-btn.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Edit form styles */
+.todo-edit-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.todo-edit-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.todo-edit-input:focus {
+  outline: none;
+  border-color: #007aff;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.todo-edit-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.todo-edit-textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.todo-edit-select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.todo-edit-select option {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Project link styling */
+.project-link {
+  color: #1a1a1a;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: inherit;
+  margin: 0;
+}
+
+.project-link:hover {
+  color: #007AFF;
+}
+
+.project-link:visited {
+  color: #1a1a1a;
 }

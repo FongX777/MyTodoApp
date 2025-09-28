@@ -1,15 +1,19 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class ProjectBase(BaseModel):
     name: str
-    status: Optional[str] = "undone"
+    description: Optional[str] = None
+    status: Optional[str] = "active"
+
 
 class ProjectCreate(ProjectBase):
     pass
+
 
 class Project(ProjectBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

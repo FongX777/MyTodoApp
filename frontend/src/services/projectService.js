@@ -18,9 +18,12 @@ const updateProject = (id, project) => {
   return axios.put(`${API_URL}/projects/${id}`, project);
 };
 
-export default {
+const projectService = {
   getProjects,
   createProject,
   getProject,
   updateProject,
 };
+
+export default projectService;
+export { projectService };
