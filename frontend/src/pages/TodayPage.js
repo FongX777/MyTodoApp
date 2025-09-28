@@ -1,11 +1,19 @@
-import React from 'react';
+import React from "react";
 
 const TodayPage = () => {
   return (
-    <div>
-      <h1>Today</h1>
-      {/* Filtered todo list will go here */}
-    </div>
+    <>
+      <div className="content-header">
+        <h1 className="page-title">Today</h1>
+        <p className="page-subtitle">Focus on what matters most today</p>
+      </div>
+      <div className="content-body">
+        <div className="empty-state">
+          <p>No tasks scheduled for today. Great job staying organized!</p>
+        </div>
+        {/* Filtered todo list will go here */}
+      </div>
+    </>
   );
 };
 

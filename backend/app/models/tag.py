@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
-from ..main import Base
+from ..database import Base
 
 todo_tags = Table('todo_tags', Base.metadata,
     Column('todo_id', Integer, ForeignKey('todos.id'), primary_key=True),

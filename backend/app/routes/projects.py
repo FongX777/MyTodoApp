@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from .. import repository
-from ..main import SessionLocal
-from ..models.project import Project
+from ..database import SessionLocal
+from ..schemas.project import Project, ProjectCreate
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ def get_db():
         db.close()
 
 @router.post("/projects", response_model=Project)
-def create_project_endpoint(project: Project, db: Session = Depends(get_db)):
+def create_project_endpoint(project: ProjectCreate, db: Session = Depends(get_db)):
     return repository.project_repo.create_project(db=db, project=project)
 
 @router.get("/projects", response_model=list[Project])
@@ -28,5 +28,5 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
     return db_project
 
 @router.put("/projects/{project_id}", response_model=Project)
-def update_project_endpoint(project_id: int, project: Project, db: Session = Depends(get_db)):
+def update_project_endpoint(project_id: int, project: ProjectCreate, db: Session = Depends(get_db)):
     return repository.project_repo.update_project(db=db, project_id=project_id, project=project)

@@ -1,16 +1,19 @@
-import React from 'react';
-import TodoList from '../components/TodoList';
-import AddTodoForm from '../components/AddTodoForm';
-import ProjectList from '../components/ProjectList';
+import React from "react";
+import TodoList from "../components/TodoList";
+import AddTodoForm from "../components/AddTodoForm";
 
 const HomePage = () => {
   return (
-    <div>
-      <h1>Todo List</h1>
-      <AddTodoForm />
-      <TodoList />
-      <ProjectList />
-    </div>
+    <>
+      <div className="content-header">
+        <h1 className="page-title">Dashboard</h1>
+        <p className="page-subtitle">Manage your tasks efficiently</p>
+      </div>
+      <div className="content-body">
+        <AddTodoForm />
+        <TodoList />
+      </div>
+    </>
   );
 };
 
