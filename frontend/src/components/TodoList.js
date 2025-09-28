@@ -34,8 +34,23 @@ const TodoList = forwardRef(({ filterByProject }, ref) => {
 
   const handleTodoUpdated = (updatedTodo) => {
     setTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+      prevTodos.map((todo) =>
+        todo.id === updatedTodo.id
+          ? updatedTodo.hidden
+            ? { ...updatedTodo, hidden: true } // Mark as hidden but keep in state temporarily
+            : updatedTodo
+          : todo
+      )
     );
+
+    // If todo is marked as hidden, remove it after a short delay
+    if (updatedTodo.hidden) {
+      setTimeout(() => {
+        setTodos((prevTodos) =>
+          prevTodos.filter((todo) => todo.id !== updatedTodo.id)
+        );
+      }, 100);
+    }
   };
 
   const handleTodoDeleted = (deletedTodoId) => {
@@ -61,9 +76,12 @@ const TodoList = forwardRef(({ filterByProject }, ref) => {
   }
 
   // Filter todos by project if filterByProject is provided
+  // Also filter out completed tasks that are hidden (unless on logbook page)
   const filteredTodos = filterByProject
-    ? todos.filter((todo) => todo.project_id === filterByProject)
-    : todos;
+    ? todos.filter(
+        (todo) => todo.project_id === filterByProject && !todo.hidden
+      )
+    : todos.filter((todo) => !todo.hidden);
 
   return (
     <div className="todo-list">

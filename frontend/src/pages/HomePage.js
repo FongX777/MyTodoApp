@@ -14,7 +14,7 @@ const HomePage = () => {
   return (
     <>
       <div className="content-header">
-        <h1 className="page-title">Dashboard</h1>
+        <h1 className="page-title">Home</h1>
         <p className="page-subtitle">Manage your tasks efficiently</p>
       </div>
       <div className="content-body">

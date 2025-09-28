@@ -1,0 +1,114 @@
+/* Logbook Styles */
+.logbook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logbook-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.logbook-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.logbook-item-content {
+  flex: 1;
+}
+
+.logbook-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.logbook-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6b7280;
+  text-decoration: line-through;
+  margin: 0;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.completion-date {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.logbook-item-description {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.logbook-item-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.logbook-item-status {
+  display: flex;
+  align-items: center;
+}
+
+.checkmark {
+  font-size: 24px;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.priority-badge.high {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.priority-badge.medium {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.priority-badge.low {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.project-badge {
+  padding: 4px 8px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Todo completion animation */
+.todo-item.completing {
+  opacity: 0.3 !important;
+  transform: scale(0.98) !important;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out !important;
+}

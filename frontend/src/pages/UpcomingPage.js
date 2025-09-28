@@ -5,7 +5,7 @@ const UpcomingPage = () => {
     <>
       <div className="content-header">
         <h1 className="page-title">Upcoming</h1>
-        <p className="page-subtitle">Plan ahead and stay prepared</p>
+        <p className="page-subtitle">Plan ahead and stay organized</p>
       </div>
       <div className="content-body">
         <div className="empty-state">

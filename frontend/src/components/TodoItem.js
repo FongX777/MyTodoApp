@@ -92,12 +92,34 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
     const newStatus = todo.status === "completed" ? "pending" : "completed";
     setIsUpdating(true);
     try {
-      const response = await todoService.updateTodo(todo.id, {
+      const updateData = {
         ...todo,
         status: newStatus,
-      });
-      if (onTodoUpdated) {
-        onTodoUpdated(response.data);
+        completed_at:
+          newStatus === "completed" ? new Date().toISOString() : null,
+      };
+      const response = await todoService.updateTodo(todo.id, updateData);
+
+      if (newStatus === "completed") {
+        // Add fade out animation
+        const todoElement = document.querySelector(
+          `[data-todo-id="${todo.id}"]`
+        );
+        if (todoElement) {
+          todoElement.style.transition = "opacity 0.5s ease-out";
+          todoElement.style.opacity = "0.3";
+
+          // Hide the todo after 0.5 seconds
+          setTimeout(() => {
+            if (onTodoUpdated) {
+              onTodoUpdated({ ...response.data, hidden: true });
+            }
+          }, 500);
+        }
+      } else {
+        if (onTodoUpdated) {
+          onTodoUpdated(response.data);
+        }
       }
     } catch (error) {
       console.error("Error updating todo status:", error);
