@@ -4,9 +4,11 @@ Structured JSON logging configuration for FastAPI.
 
 import json
 import logging
+import os
+import socket
 import sys
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -28,6 +30,7 @@ class JSONLogFormatter(logging.Formatter):
             "level": record.levelname,
             "message": record.getMessage(),
             "logger": record.name,
+            "host": socket.gethostname(),
         }
 
         # Include request_id if available
@@ -88,6 +91,69 @@ class JSONLogFormatter(logging.Formatter):
             log_data["metadata"] = metadata
 
         return json.dumps(log_data)
+
+
+class TCPLogHandler(logging.Handler):
+    """
+    Custom handler that sends logs to a TCP endpoint (like Filebeat).
+    """
+
+    def __init__(self, host: str, port: int):
+        """Initialize the TCP log handler."""
+        super().__init__()
+        self.host = host
+        self.port = port
+        self.encoder = json.JSONEncoder()
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """Send the log record to the TCP endpoint."""
+        try:
+            # Format the log record
+            formatted_log = self.format(record)
+
+            # Create a socket and send the log
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.connect((self.host, self.port))
+                sock.sendall(formatted_log.encode("utf-8") + b"\n")
+        except Exception:
+            self.handleError(record)
+
+
+class ElasticsearchLogHandler:
+    """
+    Handler factory that creates appropriate handlers for logging to Elasticsearch.
+
+    This factory determines whether to use direct TCP logging to Filebeat
+    or standard console logging based on environment configuration.
+    """
+
+    @staticmethod
+    def get_handler() -> logging.Handler:
+        """
+        Return the appropriate log handler based on environment.
+
+        If FILEBEAT_HOST and FILEBEAT_PORT are defined, returns a
+        TCPLogHandler that sends logs to Filebeat. Otherwise, returns a
+        StreamHandler for stdout.
+        """
+        # Check if using direct TCP connection to Filebeat
+        filebeat_host = os.environ.get("FILEBEAT_HOST")
+        filebeat_port_str = os.environ.get("FILEBEAT_PORT")
+
+        if filebeat_host and filebeat_port_str:
+            try:
+                filebeat_port = int(filebeat_port_str)
+                handler = TCPLogHandler(filebeat_host, filebeat_port)
+                handler.setFormatter(JSONLogFormatter())
+                return handler
+            except (ValueError, TypeError):
+                # Fall back to stdout if port is invalid
+                pass
+
+        # Default to stdout logging
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(JSONLogFormatter())
+        return handler
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
@@ -182,9 +248,8 @@ def setup_logging(service_name: str = "alertingscout") -> None:
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
 
-    # Create and configure handler with JSON formatter
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(JSONLogFormatter())
+    # Get the appropriate handler for our environment
+    handler = ElasticsearchLogHandler.get_handler()
     root_logger.addHandler(handler)
 
     # Set service name in logger context

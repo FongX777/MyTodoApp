@@ -1,0 +1,54 @@
+filebeat.inputs:
+  - type: container
+    paths:
+      - '/var/lib/docker/containers/*/*.log'
+    json.keys_under_root: true
+    json.add_error_key: true
+    processors:
+      - add_docker_metadata:
+          host: "unix:///var/run/docker.sock"
+      - rename:
+          fields:
+            - from: "message"
+              to: "original_message"
+          ignore_missing: true
+          fail_on_error: false
+      - rename:
+          fields:
+            - from: "log"
+              to: "message"
+          ignore_missing: true
+          fail_on_error: false
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  - drop_fields:
+      fields: ["agent", "ecs", "input.type"]
+      ignore_missing: true
+  - add_fields:
+      target: service
+      fields:
+        name: "alertingscout"
+        environment: "development"
+
+# Elasticsearch output
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  indices:
+    - index: "alertingscout-%{+yyyy.MM.dd}"
+      when.contains:
+        service.name: "alertingscout"
+
+# Enable monitoring
+monitoring:
+  enabled: true
+
+# Logging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644

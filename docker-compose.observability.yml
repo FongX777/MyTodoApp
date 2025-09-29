@@ -13,6 +13,10 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/alertingscout
       - LOG_LEVEL=INFO
       - PYTHONUNBUFFERED=1
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.Name}}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
       interval: 30s
@@ -134,6 +138,24 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+
+# Filebeat for shipping logs to Elasticsearch
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.0
+    user: root
+    volumes:
+      - ./specs/003-improve-observability-prometheus/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - FILEBEAT_PORT=5044
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - observability-network
 
 networks:
   observability-network:
