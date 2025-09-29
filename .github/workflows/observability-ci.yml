@@ -1,0 +1,32 @@
+name: Observability Tests
+
+on:
+  push:
+    branches: [ main, '**-improve-observability-**' ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - 'tests/observability/**'
+      - '.github/workflows/observability-ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest httpx
+          if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+          
+      - name: Test with pytest
+        run: |
+          pytest tests/observability -q

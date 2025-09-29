@@ -1,0 +1,58 @@
+{
+    "description": "Process AlertingScout API logs",
+    "processors": [
+        {
+            "json": {
+                "field": "message",
+                "target_field": "log",
+                "ignore_failure": true,
+                "add_to_root": false
+            }
+        },
+        {
+            "date": {
+                "field": "log.timestamp",
+                "formats": [
+                    "ISO8601"
+                ],
+                "target_field": "@timestamp",
+                "ignore_failure": true
+            }
+        },
+        {
+            "set": {
+                "field": "service.name",
+                "value": "{{log.service}}",
+                "ignore_failure": true
+            }
+        },
+        {
+            "set": {
+                "field": "log.level",
+                "value": "{{log.level}}",
+                "ignore_failure": true
+            }
+        },
+        {
+            "set": {
+                "field": "trace.id",
+                "value": "{{log.request_id}}",
+                "ignore_failure": true
+            }
+        },
+        {
+            "set": {
+                "field": "project.id",
+                "value": "{{log.project_id}}",
+                "ignore_failure": true
+            }
+        },
+        {
+            "set": {
+                "field": "user.id",
+                "value": "{{log.user_id}}",
+                "ignore_failure": true
+            }
+        }
+    ]
+}

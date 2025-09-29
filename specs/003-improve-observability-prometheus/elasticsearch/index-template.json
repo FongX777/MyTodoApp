@@ -1,0 +1,96 @@
+{
+    "index_patterns": [
+        "alertingscout-logs-*"
+    ],
+    "template": {
+        "settings": {
+            "number_of_shards": 1,
+            "number_of_replicas": 0,
+            "index.lifecycle.name": "alertingscout-logs-policy"
+        },
+        "mappings": {
+            "properties": {
+                "@timestamp": {
+                    "type": "date"
+                },
+                "message": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "log": {
+                    "properties": {
+                        "level": {
+                            "type": "keyword"
+                        },
+                        "logger": {
+                            "type": "keyword"
+                        },
+                        "message": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "service": {
+                    "properties": {
+                        "name": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "trace": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "project": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "user": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "metadata": {
+                    "type": "object",
+                    "dynamic": true
+                },
+                "stack_trace": {
+                    "type": "text"
+                },
+                "http": {
+                    "properties": {
+                        "method": {
+                            "type": "keyword"
+                        },
+                        "path": {
+                            "type": "keyword"
+                        },
+                        "status_code": {
+                            "type": "integer"
+                        },
+                        "duration_ms": {
+                            "type": "float"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "priority": 100,
+    "_meta": {
+        "description": "Template for AlertingScout logs"
+    }
+}

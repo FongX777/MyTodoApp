@@ -3,9 +3,14 @@ from starlette.middleware.cors import CORSMiddleware
 from .routes import todos, projects
 from .models import todo, project, tag
 from .database import engine, SessionLocal, Base
+from .middleware.request_id import add_request_id_middleware
+from .metrics import setup_metrics
+from .logging_config import setup_logging, setup_request_logging
 import time
 import logging
 
+# Initialize structured logging
+setup_logging(service_name="alertingscout-api")
 logger = logging.getLogger(__name__)
 
 
@@ -35,6 +40,7 @@ origins = [
     "*"  # Allow all origins for development
 ]
 
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -43,6 +49,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add request_id middleware (must come before request logging)
+add_request_id_middleware(app)
+
+# Add request logging middleware
+setup_request_logging(app)
+
+# Setup Prometheus metrics endpoint and middleware
+setup_metrics(
+    app,
+    service_name="alertingscout-api",
+    endpoint_path="/metrics",
+    exclude_paths=["/metrics", "/", "/docs", "/redoc", "/openapi.json"],
+)
+
+# Include API routers
 app.include_router(todos.router)
 app.include_router(projects.router)
 
