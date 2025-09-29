@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    # 使用 Dockerfile 中的預設命令
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/alertingscout
       - LOG_LEVEL=INFO
@@ -41,8 +42,6 @@ services:
   # PostgreSQL database
   db:
     image: postgres:16
-    volumes:
-      - pg_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -56,6 +55,8 @@ services:
       retries: 5
     networks:
       - observability-network
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
       
   # Prometheus for metrics collection
   prometheus:
@@ -94,15 +95,17 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - observability-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow"]
       interval: 30s
-      timeout: 10s
-      retries: 5
+      timeout: 30s
+      retries: 10
   
   # Kibana for log visualization
   kibana:
@@ -111,6 +114,9 @@ services:
       - "5601:5601"
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+      - SERVER_PUBLICBASEURL=http://localhost:5601
     networks:
       - observability-network
     depends_on:
@@ -119,8 +125,9 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
       interval: 30s
-      timeout: 10s
-      retries: 5
+      timeout: 30s
+      retries: 10
+      start_period: 60s
 
 networks:
   observability-network:
