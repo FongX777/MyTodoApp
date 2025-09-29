@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: AlertingScout API (observability prototype)
+  version: 0.1.0
+paths:
+  /todos:
+    get:
+      summary: List todos
+      responses:
+        '200':
+          description: OK
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint (exposed by instrumented service)
+      responses:
+        '200':
+          description: Prometheus metrics (text/plain)
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        completed:
+          type: boolean
+      required:
+        - id
+        - title

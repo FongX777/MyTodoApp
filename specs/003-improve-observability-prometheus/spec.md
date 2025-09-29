@@ -6,6 +6,7 @@
 **Input**: User description: "$ARGUMENTS"
 
 ## Execution Flow (main)
+
 ````markdown
 # Feature Specification: Improve observability — Prometheus (metrics) & Elasticsearch (logging)
 
@@ -66,14 +67,14 @@ As an on-call engineer, I want timely alerts and a searchable log/metrics view s
 - FR-003: System MUST centralize structured logs with at minimum: timestamp, service, level, message, request_id, user_id (if present), project_id, and stack traces for errors.
 - FR-004: System MUST provide dashboards for API health (TPS, p50/p95/p99 latency, error rate) and service resource utilization (CPU, memory).
 - FR-005: System MUST implement alert rules for:
-  - FR-005a: sustained 5xx error rate > [NEEDS CLARIFICATION: error rate threshold, e.g., 2%?] for 5 minutes
-  - FR-005b: p99 latency > [NEEDS CLARIFICATION: latency threshold, e.g., 2s?] for 5 minutes
-  - FR-005c: CPU utilization > [NEEDS CLARIFICATION: threshold] for 10 minutes
-- FR-006: System MUST retain logs and metrics metadata for [NEEDS CLARIFICATION: retention period for logs and metrics; e.g., 30 days for logs, 90 days for metrics?]
+  - FR-005a: sustained 5xx error rate > 10% for 5 minutes
+  - FR-005b: p99 latency > 1s for 5 minutes
+  - FR-005c: CPU utilization > 60% for 10 minutes
+- FR-006: System MUST retain logs and metrics metadata for 14 days
 - FR-007: System MUST allow querying logs by request_id and time range and exporting log slices for incident reports.
 
 ### Non-functional Requirements
-- NFR-001: Metrics collection and log shipping must not increase average request latency by more than [NEEDS CLARIFICATION: acceptable overhead].
+- NFR-001: Metrics collection and log shipping must not increase average request latency by more than 3% (target) and must add no more than 5ms median latency.
 - NFR-002: Dashboards must update with a maximum delay of 30s for metrics and 1 minute for logs (ingest-dependent).
 - NFR-003: The observability solution must support access control so that only authorized users can view logs containing potential PII.
 
@@ -91,11 +92,12 @@ Note: the above describes the logical flow (WHAT flows where). Detailed deployme
 
 ## Deployment & rollout plan
 
-1. Instrumentation: add stable request_id and metrics endpoints to backend service(s) in a feature branch and run unit/integration tests.
-2. Deploy lightweight collectors/shippers to a non-production environment and validate data arrives in the central systems.
-3. Create dashboards and temporary alerts in staging; exercise failure scenarios (simulated errors, latency injections).
-4. Roll out to production in a controlled manner (canary/small percentage) and monitor for increased overhead or errors.
-5. After 24–72 hours of stable operation, enable alerts for production for on-call notifications.
+1. Instrumentation: instrument the local environment first — use docker-compose to run a FastAPI instance instrumented with a request_id middleware and an exposed /metrics endpoint. Run unit and integration tests locally.
+2. Prototype pipeline: using docker-compose, deploy Prometheus, Grafana, Elasticsearch, and Kibana locally. Configure Prometheus to scrape the FastAPI /metrics endpoint and configure a simple Grafana dashboard to visualize request rate, p50/p95/p99 latency, and error rates.
+3. Validate ingestion: confirm logs (structured JSON) are shipped to Elasticsearch and can be queried by request_id, and confirm Prometheus metrics appear in Grafana dashboards.
+4. Create dashboards and temporary alerts in staging; exercise failure scenarios (simulated errors, latency injections).
+5. Roll out to production in a controlled manner (canary/small percentage) and monitor for increased overhead or errors.
+6. After 24–72 hours of stable operation, enable alerts for production for on-call notifications.
 
 ## Rollback plan
 - If instrumentation causes regressions (increased error rate or latency):
@@ -107,7 +109,7 @@ Note: the above describes the logical flow (WHAT flows where). Detailed deployme
 - AC-002: Logs emitted by a test request include a request_id that can be used to retrieve corresponding log entries from the central store within 2 minutes.
 - AC-003: Alert FR-005a triggers when a controlled test produces elevated 5xx errors above the agreed threshold for the configured window.
 - AC-004: Dashboards show p50/p95/p99 latency and error rate for all instrumented endpoints within 30s of events.
-- AC-005: Observability changes do not increase median request latency by more than [NEEDS CLARIFICATION: acceptable % or absolute ms].
+-- AC-005: Observability changes do not increase median request latency by more than 3% or 5ms (whichever is smaller).
 
 ## Security, privacy & compliance
 - Identify any PII in logs and either avoid logging it or redact/encrypt sensitive fields before indexing.
@@ -142,6 +144,18 @@ Note: the above describes the logical flow (WHAT flows where). Detailed deployme
 - What retention policy is required for logs and metrics (days/weeks/months)?
 - Are there any regulatory constraints on log storage or data residency we must follow?
 - Who owns the dashboards and alert definitions after handoff?
+
+## Clarifications
+
+### Session 2025-09-29
+- Q: Which environments should be instrumented initially? → A: local environment first
+- Q: Error rate threshold? → A: 10%
+- Q: p99 latency threshold? → A: 1s
+- Q: CPU usage threshold? → A: 60%
+- Q: Retention period for logs and metrics? → A: 14 days
+- Q: Any regulatory constraints on log storage? → A: nope
+- Q: Prototype stack and instrumentation target? → A: docker-compose + FastAPI instrument
+
 
 ## Review & acceptance checklist
 - [ ] All Acceptance Criteria (AC-*) are implemented and validated
