@@ -3,6 +3,7 @@ uvicorn
 sqlalchemy
 psycopg2-binary
 pytest
-prometheus_client
+prometheus_client>=0.16.0
 elasticsearch
 python-json-logger
+starlette

@@ -7,10 +7,12 @@ from typing import Callable, List, Optional
 
 from fastapi import FastAPI, Request, Response
 from prometheus_client import Counter, Histogram, CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
-from prometheus_client.openmetrics.exposition import CONTENT_TYPE_OPENMETRICS
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response as StarletteResponse
 from starlette.routing import Match
+
+# Define OpenMetrics content type if not available in current prometheus_client version
+CONTENT_TYPE_OPENMETRICS = "application/openmetrics-text; version=1.0.0; charset=utf-8"
 
 # Create a registry for metrics (can be default or custom)
 REGISTRY = CollectorRegistry()
@@ -81,12 +83,14 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
 
 def metrics_endpoint(request: Request) -> StarletteResponse:
     """Expose metrics for scraping by Prometheus."""
-    # Accept header determines response format
-    accept = request.headers.get("accept", "")
-    if CONTENT_TYPE_OPENMETRICS in accept:
-        content, content_type = generate_latest(REGISTRY, CONTENT_TYPE_OPENMETRICS)
-    else:
-        content, content_type = generate_latest(REGISTRY), CONTENT_TYPE_LATEST
+    # Use Prometheus default content type to ensure compatibility
+    try:
+        content = generate_latest(REGISTRY)
+        content_type = CONTENT_TYPE_LATEST
+    except Exception as e:
+        # Fallback with error message
+        content = f"# Error generating metrics: {str(e)}".encode("utf-8")
+        content_type = "text/plain"
 
     return StarletteResponse(content=content, media_type=content_type)
 
