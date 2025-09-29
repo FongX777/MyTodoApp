@@ -111,3 +111,4 @@ docker compose -f docker-compose.observability.yml down -v
 - **No metrics appearing**: Verify backend is running with `curl http://localhost:8000/metrics`
 - **No logs in Kibana**: Check Elasticsearch health with `curl http://localhost:9200/_cluster/health`
 - **Backend fails with 'ModuleNotFoundError'**: Ensure all dependencies are installed properly. If you see a missing module error, rebuild the backend container: `docker compose -f docker-compose.observability.yml build backend`
+- **Prometheus metric import errors**: If you encounter errors related to prometheus_client imports, ensure you're using prometheus_client >=0.16.0. The project has been updated to handle various versions, but rebuilding the backend container will ensure the correct version is used.
