@@ -110,3 +110,4 @@ docker compose -f docker-compose.observability.yml down -v
 - **Elasticsearch fails to start**: Increase Docker memory limits (needs at least 2GB)
 - **No metrics appearing**: Verify backend is running with `curl http://localhost:8000/metrics`
 - **No logs in Kibana**: Check Elasticsearch health with `curl http://localhost:9200/_cluster/health`
+- **Backend fails with 'ModuleNotFoundError'**: Ensure all dependencies are installed properly. If you see a missing module error, rebuild the backend container: `docker compose -f docker-compose.observability.yml build backend`
