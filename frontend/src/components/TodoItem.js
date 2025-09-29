@@ -130,7 +130,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
 
   if (isEditing) {
     return (
-      <div className="todo-item editing">
+      <article className="todo-item editing" data-todo-id={todo.id}>
         <div className="todo-edit-form">
           <input
             type="text"
@@ -192,68 +192,82 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
             </button>
           </div>
         </div>
-      </div>
+      </article>
     );
   }
 
   return (
-    <div
+    <article
       className={`todo-item ${todo.status === "completed" ? "completed" : ""}`}
+      data-todo-id={todo.id}
       draggable
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", todo.id.toString());
       }}
     >
+      <label className="todo-check-container">
+        <input
+          type="checkbox"
+          checked={todo.status === "completed"}
+          onChange={handleToggleComplete}
+          className="todo-checkbox"
+          disabled={isUpdating}
+          aria-label={
+            todo.status === "completed"
+              ? "Mark task as pending"
+              : "Mark task as completed"
+          }
+        />
+      </label>
       <div className="todo-content">
         <div className="todo-header">
-          <div className="todo-check-container">
-            <input
-              type="checkbox"
-              checked={todo.status === "completed"}
-              onChange={handleToggleComplete}
-              className="todo-checkbox"
-              disabled={isUpdating}
-            />
-          </div>
-          <div className="todo-main">
-            <h3 className="todo-title">{todo.title || "Untitled Task"}</h3>
-            {todo.description && (
-              <p className="todo-description">{todo.description}</p>
-            )}
-            <div className="todo-meta">
-              {getProjectName(todo.project_id) && (
-                <span className="todo-project">
-                  📁 {getProjectName(todo.project_id)}
-                </span>
-              )}
-              <span className="todo-status">{formatStatus(todo.status)}</span>
-              <span
-                className={`todo-priority ${getPriorityClass(todo.priority)}`}
-              >
-                {formatPriority(todo.priority)}
-              </span>
-            </div>
+          <h3
+            className={`todo-title ${
+              todo.status === "completed" ? "completed" : ""
+            }`}
+          >
+            {todo.title || "Untitled Task"}
+          </h3>
+          <div className="todo-actions">
+            <button
+              onClick={handleEdit}
+              className="todo-action-btn edit-btn"
+              title="Edit task"
+            >
+              ✏️
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="todo-action-btn delete-btn"
+              title="Delete task"
+            >
+              {isDeleting ? "..." : "🗑️"}
+            </button>
           </div>
         </div>
-        <div className="todo-actions">
-          <button
-            onClick={handleEdit}
-            className="todo-action-btn edit-btn"
-            title="Edit task"
+        {todo.description && (
+          <p className="todo-description">{todo.description}</p>
+        )}
+        <div className="todo-meta">
+          {getProjectName(todo.project_id) && (
+            <span className="todo-chip todo-chip-project">
+              📁 {getProjectName(todo.project_id)}
+            </span>
+          )}
+          <span className="todo-chip todo-chip-status">
+            {formatStatus(todo.status)}
+          </span>
+          <span
+            className={`todo-chip todo-chip-priority ${getPriorityClass(
+              todo.priority
+            )}`}
           >
-            ✏️
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="todo-action-btn delete-btn"
-            title="Delete task"
-          >
-            {isDeleting ? "..." : "🗑️"}
-          </button>
+            {formatPriority(todo.priority)}
+          </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
