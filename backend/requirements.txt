@@ -3,3 +3,6 @@ uvicorn
 sqlalchemy
 psycopg2-binary
 pytest
+prometheus_client
+elasticsearch
+python-json-logger
