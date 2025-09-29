@@ -1,8 +1,8 @@
 # Tasks — Observability feature (#003)
 
-This file lists actionable, dependency-ordered tasks. Tasks marked with [P] may be executed in parallel when they touch independent files or services.
+This file lists actionable, dependency-ordered tasks. Tasks marked with [P] may be executed in parallel when they touch independent files or services. Completed tasks are marked with [X].
 
-T001 - Setup & CI scaffolding [P]
+[X] T001 - Setup & CI scaffolding [P]
 
 - Goal: Prepare test scaffolding and CI job stub for observability checks.
 - Output: `tests/observability/`, `.github/workflows/observability-ci.yml`
@@ -11,7 +11,7 @@ T001 - Setup & CI scaffolding [P]
   2. Add `.github/workflows/observability-ci.yml` that runs `pytest tests/observability -q` (job can be a no-op until tests exist).
   3. Locally validate with `pytest -q tests/observability` (should initially fail or print placeholder).
 
-T002 [P] - Contract test: metrics endpoint
+[X] T002 [P] - Contract test: metrics endpoint
 
 - Goal: Create a failing contract test that asserts `/metrics` is present and returns Prometheus text.
 - File: `tests/observability/test_contract_metrics.py`
@@ -19,7 +19,7 @@ T002 [P] - Contract test: metrics endpoint
   - Use `httpx` or `requests` to GET `http://localhost:8000/metrics` and assert status 200 and response contains `# HELP` or metric name `request_count`.
   - Mark test as xfail or skip until service is available locally.
 
-T010 [P] - Add request_id middleware to FastAPI
+[X] T010 [P] - Add request_id middleware to FastAPI
 
 - Goal: Ensure each request has a stable `X-Request-Id` header and the value appears in logs.
 - Files to modify/create:
@@ -30,7 +30,7 @@ T010 [P] - Add request_id middleware to FastAPI
   - If `X-Request-Id` header provided, forward; else generate UUID4.
   - Add header to response and store in request context for logging.
 
-T011 [P] - Add Prometheus instrumentation to FastAPI
+[X] T011 [P] - Add Prometheus instrumentation to FastAPI
 
 - Goal: Expose `/metrics` and instrument requests with `request_count`, `request_duration_seconds` (histogram) and `response_status_count` labels: service, endpoint, method, status, project_id.
 - Files to modify/create:
@@ -38,13 +38,13 @@ T011 [P] - Add Prometheus instrumentation to FastAPI
   - `backend/app/main.py` (mount `/metrics` and call instrumentation middleware)
 - Acceptance test: `curl http://localhost:8000/metrics` returns 200 and contains `request_count`.
 
-T012 [P] - Add structured JSON logging
+[X] T012 [P] - Add structured JSON logging
 
 - Goal: Configure structured logging (json) including `timestamp, service, level, message, request_id, project_id`.
 - Files: `backend/app/logging_config.py` (new), update `backend/app/main.py` to use it.
 - Acceptance: Logs on stdout are valid JSON and contain `request_id` field.
 
-T020 - Compose prototype: add `docker-compose.observability.yml`
+[X] T020 - Compose prototype: add `docker-compose.observability.yml`
 
 - Goal: Provide a local prototype to run instrumented FastAPI + Prometheus + Grafana + Elasticsearch + Kibana.
 - File: repo root `docker-compose.observability.yml`
@@ -56,7 +56,7 @@ T020 - Compose prototype: add `docker-compose.observability.yml`
   - kibana: `docker.elastic.co/kibana/kibana:8.8.0` (5601)
 - Acceptance: `docker compose -f docker-compose.observability.yml up --build` starts all containers and ports are reachable.
 
-T021 [P] - Add Prometheus config and Grafana dashboard
+[X] T021 [P] - Add Prometheus config and Grafana dashboard
 
 - Goal: Add `prometheus.yml` pointing to `backend:8000` and a Grafana dashboard JSON that visualizes request rate and latency.
 - Files:
@@ -64,7 +64,7 @@ T021 [P] - Add Prometheus config and Grafana dashboard
   - `specs/003-improve-observability-prometheus/grafana/observability.json`
 - Acceptance: Grafana dashboard loads and shows Prometheus metrics after compose up.
 
-T022 - Elasticsearch ingest pipeline & index template
+[X] T022 - Elasticsearch ingest pipeline & index template
 
 - Goal: Provide ingest pipeline and index template to map `request_id`, `service`, `project_id` as keywords.
 - Files:
@@ -72,25 +72,25 @@ T022 - Elasticsearch ingest pipeline & index template
   - `specs/003-improve-observability-prometheus/elasticsearch/index-template.json`
 - Acceptance: On indexing logs, fields appear with correct types in Kibana.
 
-T030 [P] - E2E integration test: request -> metrics & logs
+[X] T030 [P] - E2E integration test: request -> metrics & logs
 
 - Goal: Automated test sending an HTTP request, checking `/metrics` and querying Elasticsearch for the log with the same `request_id`.
 - File: `tests/observability/test_e2e_metrics_logs.py`
 - Acceptance: Test asserts both metric increment and a corresponding log entry exist.
 
-T031 - Load test and performance validation
+[X] T031 - Load test and performance validation
 
 - Goal: Run a lightweight load test (wrk/locust) to measure p99 latency and CPU overhead.
 - Files: `specs/003-improve-observability-prometheus/load-tests/README.md` and an example script `specs/003-improve-observability-prometheus/load-tests/run_wrk.sh`
 - Acceptance: p99 < 1s and instrumentation overhead <3% CPU / <5ms median latency. If not met, adjust sampling/labels.
 
-T032 - Alerting smoke test
+[X] T032 - Alerting smoke test
 
 - Goal: Simulate 5xx spike and verify Prometheus alert rule triggers (using a local Alertmanager or webhook stub).
 - File: `specs/003-improve-observability-prometheus/alert-testing/trigger_error_spike.sh`
 - Acceptance: Alert rule for 5xx > 10% for 5m transitions to firing state in Alertmanager (or local stub receives webhook).
 
-T040 - Update quickstart & runbook
+[X] T040 - Update quickstart & runbook
 
 - Goal: Finalize `quickstart.md` with exact compose commands, env vars, troubleshooting, and how to query Prometheus/Grafana/Kibana.
 - File: `specs/003-improve-observability-prometheus/quickstart.md` (update)
