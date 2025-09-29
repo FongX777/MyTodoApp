@@ -1,7 +1,6 @@
-```markdown
 # Quickstart: Observability Stack with Prometheus & Elasticsearch
 
-This guide helps you run a local development stack with instrumented FastAPI, Prometheus for metrics, Grafana for dashboards, Elasticsearch for logs, and Kibana for log visualization.
+This guide helps you run a local development stack with instrumented FastAPI, React frontend, PostgreSQL database, Prometheus for metrics, Grafana for dashboards, Elasticsearch for logs, and Kibana for log visualization.
 
 ## Prerequisites
 
@@ -19,6 +18,7 @@ docker compose -f docker-compose.observability.yml up --build
 2. Wait for all services to become healthy (usually takes 1-2 minutes for Elasticsearch).
 
 3. Access the services:
+   - Frontend: [http://localhost:3001](http://localhost:3001)
    - Backend API: [http://localhost:8000](http://localhost:8000)
    - Prometheus: [http://localhost:9090](http://localhost:9090)
    - Grafana: [http://localhost:3000](http://localhost:3000) (login: admin/admin)
@@ -110,5 +110,3 @@ docker compose -f docker-compose.observability.yml down -v
 - **Elasticsearch fails to start**: Increase Docker memory limits (needs at least 2GB)
 - **No metrics appearing**: Verify backend is running with `curl http://localhost:8000/metrics`
 - **No logs in Kibana**: Check Elasticsearch health with `curl http://localhost:9200/_cluster/health`
-
-```
