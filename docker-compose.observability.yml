@@ -9,14 +9,53 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./test.db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/alertingscout
       - LOG_LEVEL=INFO
-    volumes:
-      - ./backend:/app
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
     networks:
       - observability-network
     depends_on:
-      - elasticsearch
+      db:
+        condition: service_healthy
+
+  # Frontend application
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3001:3001"
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8000
+    restart: unless-stopped
+    networks:
+      - observability-network
+    depends_on:
+      - backend
+      
+  # PostgreSQL database
+  db:
+    image: postgres:16
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=alertingscout
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability-network
       
   # Prometheus for metrics collection
   prometheus:
@@ -89,3 +128,4 @@ networks:
 
 volumes:
   elasticsearch-data:
+  pg_data:
