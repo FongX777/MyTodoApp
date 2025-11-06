@@ -15,8 +15,9 @@ def get_db():
         db.close()
 
 
-@router.post("/todos", response_model=Todo)
+@router.post("/todos", response_model=Todo, status_code=201)
 def create_todo_endpoint(todo: TodoCreate, db: Session = Depends(get_db)):
+    # Create a new todo item and return it with HTTP 201 Created
     return repository.todo_repo.create_todo(db=db, todo=todo)
 
 

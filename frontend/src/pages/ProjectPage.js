@@ -32,8 +32,12 @@ const ProjectPage = () => {
   }, [projectId]);
 
   const handleTodoAdded = (newTodo) => {
-    if (todoListRef.current && todoListRef.current.refreshTodos) {
-      todoListRef.current.refreshTodos();
+    if (todoListRef.current) {
+      if (todoListRef.current.addTodo) {
+        todoListRef.current.addTodo(newTodo);
+      } else if (todoListRef.current.refreshTodos) {
+        todoListRef.current.refreshTodos();
+      }
     }
   };
 

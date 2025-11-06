@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional
 
@@ -12,6 +12,24 @@ class TodoBase(BaseModel):
     status: Optional[str] = "pending"
     order: Optional[int] = None
     project_id: Optional[int] = None
+
+    @field_validator("status")
+    def normalize_status(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        mapping = {
+            "undone": "pending",
+            "todo": "pending",
+            "in_progress": "pending",
+            "done": "completed",
+            "complete": "completed",
+            "completed": "completed",
+            "cancel": "cancelled",
+            "canceled": "cancelled",
+            "cancelled": "cancelled",
+        }
+        lowered = v.lower()
+        return mapping.get(lowered, lowered)
 
 
 class TodoCreate(TodoBase):

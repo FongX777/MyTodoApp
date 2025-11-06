@@ -73,6 +73,13 @@ const TodoList = forwardRef(({ filterByProject }, ref) => {
 
   useImperativeHandle(ref, () => ({
     refreshTodos: fetchTodos,
+    addTodo: (todo) => {
+      // Prevent duplicates if already loaded
+      setTodos((prev) => {
+        if (prev.find((t) => t.id === todo.id)) return prev;
+        return [todo, ...prev];
+      });
+    },
   }));
 
   if (loading) {
