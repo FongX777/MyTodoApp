@@ -1588,3 +1588,25 @@ nav a:focus {
   vertical-align: text-bottom;
 }
 
+/* Upcoming Page Sections */
+.upcoming-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.upcoming-date-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upcoming-date-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 2px solid #e2e8f0;
+}
+
