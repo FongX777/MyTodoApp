@@ -15,10 +15,12 @@ import ProjectPage from "./pages/ProjectPage";
 import { projectService } from "./services/projectService";
 import { todoService } from "./services/todoService";
 import AddProjectForm from "./components/AddProjectForm";
+import { ToastProvider, useToast } from "./components/ToastProvider";
 
 function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [projects, setProjects] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,6 +51,16 @@ function Navigation() {
       const full = existing.data;
       const payload = { ...full, project_id: newProjectId };
       await todoService.updateTodo(todoId, payload);
+      
+      // Show toast notification
+      const projectName = projects.find(p => p.id === newProjectId)?.name || 'Project';
+      showToast(`Moved to ${projectName}`);
+      
+      // Trigger refresh for inbox view if moving from inbox
+      if (location.pathname === '/' && full.project_id === null) {
+        window.dispatchEvent(new CustomEvent('todo-moved-from-inbox'));
+      }
+      
       // Stay on current view after drag and drop
     } catch (error) {
       console.error("Error updating todo project:", error);
