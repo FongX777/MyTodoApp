@@ -77,12 +77,10 @@ def test_create_todo_missing_title(client, test_db):
     assert response.status_code == 422  # Validation error
 
 
-@pytest.mark.xfail(reason="SQLite does not enforce ENUM constraints")
 def test_create_todo_invalid_priority(client, test_db):
     """Test that invalid priority values are rejected."""
     todo_data = {
-        "title": "Invalid Priority Todo",
-        "description": "Has invalid priority",
+        "title": "Bad Priority",
         "priority": "invalid_priority",
         "status": "pending",
     }
@@ -90,12 +88,10 @@ def test_create_todo_invalid_priority(client, test_db):
     assert response.status_code == 422
 
 
-@pytest.mark.xfail(reason="SQLite does not enforce ENUM constraints")
 def test_create_todo_invalid_status(client, test_db):
     """Test that invalid status values are rejected."""
     todo_data = {
-        "title": "Invalid Status Todo",
-        "description": "Has invalid status",
+        "title": "Bad Status",
         "priority": "low",
         "status": "invalid_status",
     }
