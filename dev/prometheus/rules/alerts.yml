@@ -5,9 +5,9 @@ groups:
       - alert: P1_API_01_Critical_Error_Rate
         expr: |
           (
-            sum(rate(request_count{service="mytodoapp",status=~"5.."}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp",status=~"5.."}[5m])) by (service)
             /
-            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.10
         for: 5m
         labels:
@@ -23,9 +23,9 @@ groups:
       - alert: P2_API_02_High_Error_Rate
         expr: |
           (
-            sum(rate(request_count{service="mytodoapp",status=~"5.."}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp",status=~"5.."}[5m])) by (service)
             /
-            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.05
         for: 5m
         labels:
@@ -41,9 +41,9 @@ groups:
       - alert: P2_API_03_High_Client_Error_Rate
         expr: |
           (
-            sum(rate(request_count{service="mytodoapp",status=~"4.."}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp",status=~"4.."}[5m])) by (service)
             /
-            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.20
         for: 5m
         labels:
@@ -59,9 +59,9 @@ groups:
       - alert: P3_API_04_Medium_Client_Error_Rate
         expr: |
           (
-            sum(rate(request_count{service="mytodoapp",status=~"4.."}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp",status=~"4.."}[5m])) by (service)
             /
-            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+            sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.10
         for: 5m
         labels:
