@@ -6,6 +6,15 @@ COMPOSE_FILE := docker-compose.yaml
 COMPOSE_OBSERVABILITY := docker-compose.observability.yml
 BACKEND_DIR := backend
 FRONTEND_DIR := frontend
+DOCKER_PATH := /Applications/Docker.app/Contents/Resources/bin
+DOCKER := docker
+DOCKER_COMPOSE := docker compose
+
+# Check if Docker is available in PATH, otherwise use full path
+ifeq ($(shell which docker),)
+    DOCKER := /Applications/Docker.app/Contents/Resources/bin/docker
+    DOCKER_COMPOSE := /Applications/Docker.app/Contents/Resources/bin/docker compose
+endif
 
 # Colors for output
 BLUE := \033[36m
@@ -24,16 +33,19 @@ help: ## Show this help message
 .PHONY: dev
 dev: ## Start all services with Docker Compose
 	@echo "$(BLUE)Starting development environment...$(NC)"
-	docker compose -f $(COMPOSE_FILE) up --build -d
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) up --build -d
 	@echo "$(GREEN)Services started successfully!$(NC)"
 	@echo "Frontend: http://localhost:3001"
 	@echo "Backend:  http://localhost:8000"
 	@echo "API Docs: http://localhost:8000/docs"
+	@echo "Grafana：http://localhost:3000"
+	@echo "Prometheus：http://localhost:9090"
+	@echo "Kibana：http://localhost:5601"
 
 .PHONY: dev-observability
 dev-observability: ## Start with full observability stack
 	@echo "$(BLUE)Starting with observability stack...$(NC)"
-	docker compose -f $(COMPOSE_OBSERVABILITY) up --build -d
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_OBSERVABILITY) up --build -d
 	@echo "$(GREEN)Observability stack started successfully!$(NC)"
 	@echo "Frontend:      http://localhost:3001"
 	@echo "Backend:       http://localhost:8000"
@@ -44,7 +56,7 @@ dev-observability: ## Start with full observability stack
 .PHONY: dev-db
 dev-db: ## Start only the database for local development
 	@echo "$(BLUE)Starting database only...$(NC)"
-	docker compose -f $(COMPOSE_FILE) up -d db
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) up -d db
 	@echo "$(GREEN)Database started successfully!$(NC)"
 
 .PHONY: frontend-install
@@ -94,47 +106,47 @@ test-all: ## Run all tests
 # Utility Commands
 .PHONY: logs
 logs: ## Show application logs
-	docker compose -f $(COMPOSE_FILE) logs -f
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) logs -f
 
 .PHONY: logs-backend
 logs-backend: ## Show backend logs only
-	docker compose -f $(COMPOSE_FILE) logs -f backend
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) logs -f backend
 
 .PHONY: logs-frontend
 logs-frontend: ## Show frontend logs only
-	docker compose -f $(COMPOSE_FILE) logs -f frontend
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) logs -f frontend
 
 .PHONY: shell-backend
 shell-backend: ## Open shell in backend container
-	docker compose -f $(COMPOSE_FILE) exec backend bash
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec backend bash
 
 .PHONY: shell-frontend
 shell-frontend: ## Open shell in frontend container
-	docker compose -f $(COMPOSE_FILE) exec frontend sh
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec frontend sh
 
 .PHONY: shell-db
 shell-db: ## Connect to PostgreSQL database
-	docker compose -f $(COMPOSE_FILE) exec db psql -U user -d tododb
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec db psql -U user -d tododb
 
 # Cleanup Commands
 .PHONY: stop
 stop: ## Stop all services
 	@echo "$(BLUE)Stopping services...$(NC)"
-	docker compose -f $(COMPOSE_FILE) down
-	docker compose -f $(COMPOSE_OBSERVABILITY) down 2>/dev/null || true
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) down
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_OBSERVABILITY) down 2>/dev/null || true
 	@echo "$(GREEN)Services stopped!$(NC)"
 
 .PHONY: clean
 clean: ## Stop services and remove containers/volumes
 	@echo "$(BLUE)Cleaning up containers and volumes...$(NC)"
-	docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
-	docker compose -f $(COMPOSE_OBSERVABILITY) down -v --remove-orphans 2>/dev/null || true
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_OBSERVABILITY) down -v --remove-orphans 2>/dev/null || true
 	@echo "$(GREEN)Cleanup complete!$(NC)"
 
 .PHONY: reset
 reset: clean ## Full reset (clean + rebuild)
 	@echo "$(BLUE)Performing full reset...$(NC)"
-	docker system prune -f
+	export PATH="$(DOCKER_PATH):$$PATH" && docker system prune -f
 	$(MAKE) dev
 	@echo "$(GREEN)Reset complete!$(NC)"
 
@@ -179,11 +191,11 @@ format-frontend: ## Format frontend code
 .PHONY: build
 build: ## Build production images
 	@echo "$(BLUE)Building production images...$(NC)"
-	docker compose -f $(COMPOSE_FILE) build
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) build
 	@echo "$(GREEN)Build complete!$(NC)"
 
 # Status check
 .PHONY: status
 status: ## Show status of all services
 	@echo "$(BLUE)Service Status:$(NC)"
-	@docker compose -f $(COMPOSE_FILE) ps
+	@export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) ps
