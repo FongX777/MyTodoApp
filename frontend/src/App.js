@@ -76,7 +76,7 @@ function Navigation() {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h1 className="sidebar-title">AlertingScout</h1>
+        <h1 className="sidebar-title">TodoApp</h1>
       </div>
       <nav>
         <ul>
