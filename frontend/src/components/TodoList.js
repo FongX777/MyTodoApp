@@ -198,67 +198,69 @@ const TodoList = forwardRef(
       : 0;
 
     return (
-      <div className="todo-list">
-        <div className="todo-list-header">
-          <div className="todo-list-heading">
-            <h2 className="todo-list-title">Tasks</h2>
-            <p className="todo-list-subtitle">
-              {totalCount
-                ? `${
-                    totalCount - completedCount
-                  } open • ${completionRate}% complete`
-                : "You're all caught up"}
-            </p>
+      <section className="task-section">
+        <header className="task-header">
+          <div className="task-header-main">
+            <h2 className="task-title">Tasks</h2>
+            <div className="task-header-right">
+              {!hideStatusTabs && (
+                <nav
+                  className="task-tabs"
+                  role="group"
+                  aria-label="Filter tasks by status"
+                >
+                  {FILTERS.map((filter) => (
+                    <button
+                      key={filter.id}
+                      type="button"
+                      className={`task-tab ${
+                        statusFilter === filter.id ? "active" : ""
+                      }`}
+                      onClick={() => setStatusFilter(filter.id)}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
+                </nav>
+              )}
+              <label className="task-search" htmlFor="task-search-input">
+                <span
+                  className="material-icons task-search-icon"
+                  aria-hidden="true"
+                >
+                  search
+                </span>
+                <input
+                  id="task-search-input"
+                  type="search"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  className="task-search-input"
+                />
+              </label>
+            </div>
           </div>
-          <div className="todo-list-controls">
-            {!hideStatusTabs && (
-              <div
-                className="todo-filter-group"
-                role="group"
-                aria-label="Filter tasks by status"
-              >
-                {FILTERS.map((filter) => (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    className={`todo-filter-btn ${
-                      statusFilter === filter.id ? "active" : ""
-                    }`}
-                    onClick={() => setStatusFilter(filter.id)}
-                  >
-                    {filter.label}
-                  </button>
-                ))}
-              </div>
-            )}
-            <label className="todo-search" htmlFor="todo-search-input">
-              <span className="todo-search-icon" aria-hidden="true">
-                🔍
-              </span>
-              <input
-                id="todo-search-input"
-                type="search"
-                placeholder="Search tasks"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                className="todo-search-input"
-              />
-            </label>
-          </div>
+
           {totalCount > 0 && (
-            <div
-              className="todo-progress"
-              aria-label="Task completion progress"
-            >
+            <div className="task-progress-wrapper">
+              <p className="task-progress-text">
+                {totalCount - completedCount} open • {completionRate}% complete
+              </p>
               <div
-                className="todo-progress-bar"
-                style={{ width: `${completionRate}%` }}
-              />
+                className="task-progress"
+                aria-label="Task completion progress"
+              >
+                <div
+                  className="task-progress-bar"
+                  style={{ width: `${completionRate}%` }}
+                />
+              </div>
             </div>
           )}
-        </div>
+        </header>
         {sortedTodos.length === 0 ? (
-          <div className="empty-state">
+          <div className="task-empty">
             <p>
               {filterByProject
                 ? "No tasks in this project yet."
@@ -266,13 +268,11 @@ const TodoList = forwardRef(
             </p>
           </div>
         ) : (
-          <div className="todo-items">
+          <div className="task-list">
             {isProjectView ? (
-              // Project view with reordering support
               <>
                 {sortedTodos.map((todo, index) => (
                   <Fragment key={todo.id}>
-                    {/* Drop zone before each item */}
                     <div
                       className={`drop-zone ${
                         dropIndex === index ? "drop-active" : ""
@@ -283,7 +283,7 @@ const TodoList = forwardRef(
                       style={{
                         height: dropIndex === index ? "4px" : "2px",
                         backgroundColor:
-                          dropIndex === index ? "#007bff" : "transparent",
+                          dropIndex === index ? "#3b82f6" : "transparent",
                         margin: "2px 0",
                         transition: "all 0.2s ease",
                       }}
@@ -302,7 +302,6 @@ const TodoList = forwardRef(
                     </div>
                   </Fragment>
                 ))}
-                {/* Drop zone at the end */}
                 <div
                   className={`drop-zone ${
                     dropIndex === sortedTodos.length ? "drop-active" : ""
@@ -314,7 +313,7 @@ const TodoList = forwardRef(
                     height: dropIndex === sortedTodos.length ? "4px" : "2px",
                     backgroundColor:
                       dropIndex === sortedTodos.length
-                        ? "#007bff"
+                        ? "#3b82f6"
                         : "transparent",
                     margin: "2px 0",
                     transition: "all 0.2s ease",
@@ -322,7 +321,6 @@ const TodoList = forwardRef(
                 />
               </>
             ) : (
-              // Other views without reordering
               sortedTodos.map((todo) => (
                 <TodoItem
                   key={todo.id}
@@ -335,7 +333,7 @@ const TodoList = forwardRef(
             )}
           </div>
         )}
-      </div>
+      </section>
     );
   }
 );

@@ -127,29 +127,29 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
 
   if (isEditing) {
     return (
-      <article className="todo-item editing" data-todo-id={todo.id}>
-        <div className="todo-edit-form">
+      <article className="task-item editing" data-todo-id={todo.id}>
+        <div className="task-edit-form">
           <input
             type="text"
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
-            className="edit-title-input"
+            className="task-edit-input"
             placeholder="Task title..."
           />
           <textarea
             value={editDescription}
             onChange={(e) => setEditDescription(e.target.value)}
-            className="edit-description-input"
+            className="task-edit-textarea"
             placeholder="Description..."
             rows="2"
           />
-          <div className="edit-row">
-            <div className="edit-field">
+          <div className="task-edit-row">
+            <div className="task-edit-field">
               <label>Priority</label>
               <select
                 value={editPriority}
                 onChange={(e) => setEditPriority(e.target.value)}
-                className="edit-select"
+                className="task-edit-select"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -157,12 +157,12 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
                 <option value="urgent">Urgent</option>
               </select>
             </div>
-            <div className="edit-field">
+            <div className="task-edit-field">
               <label>Project</label>
               <select
                 value={editProjectId}
                 onChange={(e) => setEditProjectId(e.target.value)}
-                className="edit-select"
+                className="task-edit-select"
               >
                 <option value="">No Project</option>
                 {projects.map((project) => (
@@ -172,27 +172,27 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
                 ))}
               </select>
             </div>
-            <div className="edit-field">
+            <div className="task-edit-field">
               <label>Deadline</label>
               <input
                 type="date"
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
-                className="edit-date-input"
+                className="task-edit-date"
               />
             </div>
           </div>
-          <div className="edit-actions">
+          <div className="task-edit-actions">
             <button
               onClick={handleSaveEdit}
               disabled={isUpdating || !editTitle.trim()}
-              className="btn-mini btn-primary"
+              className="task-btn task-btn-primary"
             >
               {isUpdating ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancelEdit}
-              className="btn-mini btn-secondary"
+              className="task-btn task-btn-secondary"
             >
               Cancel
             </button>
@@ -204,47 +204,47 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
 
   return (
     <article
-      className={`todo-item ${todo.status === "completed" ? "completed" : ""}`}
+      className={`task-item ${todo.status === "completed" ? "completed" : ""}`}
       data-todo-id={todo.id}
       draggable
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", todo.id.toString());
       }}
       onDoubleClick={handleEdit}
-      style={{ cursor: "pointer" }}
     >
-      <label className="todo-check-container">
+      <label className="task-checkbox-wrapper">
         <input
           type="checkbox"
           checked={todo.status === "completed" || pendingCompleteDelay}
           onChange={handleToggleComplete}
-          className="todo-checkbox"
+          className="task-checkbox"
           disabled={isUpdating}
           onDoubleClick={(e) => e.stopPropagation()}
           aria-label={
             todo.status === "completed"
-              ? "Mark task as pending"
-              : "Mark task as completed"
+              ? "Mark as pending"
+              : "Mark as completed"
           }
         />
       </label>
-      <div className="todo-content">
-        <div className="todo-header">
+
+      <div className="task-content">
+        <div className="task-header-row">
           <h3
-            className={`todo-title ${
+            className={`task-item-title ${
               todo.status === "completed" ? "completed" : ""
             }`}
             onClick={handleEdit}
-            style={{ cursor: "pointer" }}
           >
             {todo.title || "Untitled Task"}
           </h3>
-          <div className="todo-actions">
+          <div className="task-actions">
             <button
               onClick={handleEdit}
               onDoubleClick={(e) => e.stopPropagation()}
-              className="todo-action-btn edit-btn"
+              className="task-action-btn edit"
               title="Edit task"
+              aria-label="Edit task"
             >
               <span className="material-icons">edit</span>
             </button>
@@ -252,8 +252,9 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
               onClick={handleDelete}
               onDoubleClick={(e) => e.stopPropagation()}
               disabled={isDeleting}
-              className="todo-action-btn delete-btn"
+              className="task-action-btn delete"
               title="Delete task"
+              aria-label="Delete task"
             >
               {isDeleting ? (
                 "..."
@@ -263,26 +264,26 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
             </button>
           </div>
         </div>
+
         {todo.description && (
-          <p className="todo-description">{todo.description}</p>
+          <p className="task-description">{todo.description}</p>
         )}
-        <div className="todo-meta">
+
+        <div className="task-meta">
           {getProjectName(todo.project_id) && (
-            <span className="todo-chip todo-chip-project">
-              <span className="material-icons">folder</span>{" "}
+            <span className="task-badge project">
+              <span className="material-icons">folder</span>
               {getProjectName(todo.project_id)}
             </span>
           )}
           <span
-            className={`todo-chip todo-chip-priority ${getPriorityClass(
-              todo.priority
-            )}`}
+            className={`task-badge priority ${getPriorityClass(todo.priority)}`}
           >
             {formatPriority(todo.priority)}
           </span>
           {todo.deadline_at && (
-            <span className="todo-chip todo-chip-deadline" title="Deadline">
-              <span className="material-icons">event</span>{" "}
+            <span className="task-badge deadline" title="Deadline">
+              <span className="material-icons">event</span>
               {new Date(todo.deadline_at).toLocaleDateString()}
             </span>
           )}

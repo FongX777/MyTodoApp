@@ -17,6 +17,9 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const popoverRef = useRef(null);
   const priorityListRef = useRef(null);
+  const projectBtnRef = useRef(null);
+  const priorityBtnRef = useRef(null);
+  const calendarBtnRef = useRef(null);
 
   useEffect(() => {
     if (!defaultProjectId) {
@@ -177,6 +180,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
           {!defaultProjectId && (
             <button
               type="button"
+              ref={projectBtnRef}
               className={`things-icon-btn ${showProject ? "active" : ""}`}
               onClick={() => {
                 setShowProject((s) => !s);
@@ -191,6 +195,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
           )}
           <button
             type="button"
+            ref={priorityBtnRef}
             className={`things-icon-btn ${showPriority ? "active" : ""}`}
             onClick={() => {
               setShowPriority((s) => !s);
@@ -204,6 +209,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
           </button>
           <button
             type="button"
+            ref={calendarBtnRef}
             className={`things-icon-btn ${showCalendar ? "active" : ""}`}
             onClick={() => {
               setShowCalendar((s) => !s);
@@ -218,146 +224,166 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
         </div>
       </div>
       {(showPriority || showProject || showCalendar) && (
-        <>
-          <div
-            className="things-overlay"
-            onClick={() => {
-              setShowPriority(false);
-              setShowProject(false);
-              setShowCalendar(false);
-            }}
-          />
-          <div className="things-popovers">
-            {showProject && !defaultProjectId && (
-              <div className="things-popover">
-                <div className="things-popover-title">Project</div>
-                {projects.length === 0 ? (
-                  <div className="things-popover-empty">No projects</div>
-                ) : (
-                  <ul className="things-popover-list" role="listbox">
-                    {projects.map((p) => (
-                      <li key={p.id}>
-                        <button
-                          type="button"
-                          className={`things-popover-item ${
-                            selectedProjectId === p.id ? "selected" : ""
-                          }`}
-                          onClick={() => {
-                            setSelectedProjectId(p.id);
-                            setShowProject(false);
-                          }}
-                          tabIndex={0}
-                        >
-                          {p.name}
-                        </button>
-                      </li>
-                    ))}
-                    <li>
-                      <button
-                        type="button"
-                        className={`things-popover-item ${
-                          selectedProjectId === null ? "selected" : ""
-                        }`}
-                        onClick={() => {
-                          setSelectedProjectId(null);
-                          setShowProject(false);
-                        }}
-                        tabIndex={0}
-                      >
-                        No Project
-                      </button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            )}
-            {showPriority && (
-              <div className="things-popover">
-                <div className="things-popover-title">Priority</div>
-                <ul
-                  className="things-popover-list"
-                  role="listbox"
-                  ref={priorityListRef}
+        <div
+          className="things-overlay"
+          onClick={() => {
+            setShowPriority(false);
+            setShowProject(false);
+            setShowCalendar(false);
+          }}
+        />
+      )}
+      {showProject && !defaultProjectId && projectBtnRef.current && (
+        <div
+          className="things-popover things-popover-absolute"
+          style={{
+            position: "fixed",
+            top: `${
+              projectBtnRef.current.getBoundingClientRect().bottom + 8
+            }px`,
+            left: `${projectBtnRef.current.getBoundingClientRect().left}px`,
+          }}
+        >
+          <div className="things-popover-title">Project</div>
+          {projects.length === 0 ? (
+            <div className="things-popover-empty">No projects</div>
+          ) : (
+            <ul className="things-popover-list" role="listbox">
+              {projects.map((p) => (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    className={`things-popover-item ${
+                      selectedProjectId === p.id ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedProjectId(p.id);
+                      setShowProject(false);
+                    }}
+                    tabIndex={0}
+                  >
+                    {p.name}
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button
+                  type="button"
+                  className={`things-popover-item ${
+                    selectedProjectId === null ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedProjectId(null);
+                    setShowProject(false);
+                  }}
+                  tabIndex={0}
                 >
-                  {[
-                    { id: "low", label: "Low" },
-                    { id: "medium", label: "Medium" },
-                    { id: "high", label: "High" },
-                    { id: "urgent", label: "Urgent" },
-                  ].map((opt) => (
-                    <li key={opt.id}>
-                      <button
-                        type="button"
-                        className={`things-popover-item ${
-                          priority === opt.id ? "selected" : ""
-                        }`}
-                        onClick={() => {
-                          setPriority(opt.id);
-                          setShowPriority(false);
-                        }}
-                        tabIndex={0}
-                      >
-                        {opt.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {showCalendar && (
-              <div className="things-popover">
-                <div className="things-popover-title">Deadline</div>
-                <div className="things-popover-calendar">
-                  <input
-                    type="date"
-                    value={deadlineDate}
-                    onChange={(e) => setDeadlineDate(e.target.value)}
-                    className="things-inline-date"
-                  />
-                  <div className="things-date-shortcuts">
-                    <button
-                      type="button"
-                      onClick={() => setDeadlineDate(todayStr)}
-                    >
-                      Today
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const d = new Date();
-                        d.setDate(d.getDate() + 1);
-                        setDeadlineDate(d.toISOString().substring(0, 10));
-                      }}
-                    >
-                      Tomorrow
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const d = new Date();
-                        const day = d.getDay();
-                        const offset = (1 - day + 7) % 7 || 7; // Next Monday
-                        d.setDate(d.getDate() + offset);
-                        setDeadlineDate(d.toISOString().substring(0, 10));
-                      }}
-                    >
-                      Next Mon
-                    </button>
-                  </div>
-                  {deadlineDate && (
-                    <button
-                      type="button"
-                      className="things-clear-date"
-                      onClick={() => setDeadlineDate("")}
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </div>
+                  No Project
+                </button>
+              </li>
+            </ul>
+          )}
+        </div>
+      )}
+      {showPriority && priorityBtnRef.current && (
+        <div
+          className="things-popover things-popover-absolute"
+          style={{
+            position: "fixed",
+            top: `${
+              priorityBtnRef.current.getBoundingClientRect().bottom + 8
+            }px`,
+            left: `${priorityBtnRef.current.getBoundingClientRect().left}px`,
+          }}
+        >
+          <div className="things-popover-title">Priority</div>
+          <ul
+            className="things-popover-list"
+            role="listbox"
+            ref={priorityListRef}
+          >
+            {[
+              { id: "low", label: "Low" },
+              { id: "medium", label: "Medium" },
+              { id: "high", label: "High" },
+              { id: "urgent", label: "Urgent" },
+            ].map((opt) => (
+              <li key={opt.id}>
+                <button
+                  type="button"
+                  className={`things-popover-item ${
+                    priority === opt.id ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    setPriority(opt.id);
+                    setShowPriority(false);
+                  }}
+                  tabIndex={0}
+                >
+                  {opt.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {showCalendar && calendarBtnRef.current && (
+        <div
+          className="things-popover things-popover-absolute"
+          style={{
+            position: "fixed",
+            top: `${
+              calendarBtnRef.current.getBoundingClientRect().bottom + 8
+            }px`,
+            left: `${calendarBtnRef.current.getBoundingClientRect().left}px`,
+          }}
+        >
+          <div className="things-popover-title">Deadline</div>
+          <div className="things-popover-calendar">
+            <input
+              type="date"
+              value={deadlineDate}
+              onChange={(e) => setDeadlineDate(e.target.value)}
+              className="things-inline-date"
+            />
+            <div className="things-date-shortcuts">
+              <button type="button" onClick={() => setDeadlineDate(todayStr)}>
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const d = new Date();
+                  d.setDate(d.getDate() + 1);
+                  setDeadlineDate(d.toISOString().substring(0, 10));
+                }}
+              >
+                Tomorrow
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const d = new Date();
+                  const day = d.getDay();
+                  const offset = (1 - day + 7) % 7 || 7;
+                  d.setDate(d.getDate() + offset);
+                  setDeadlineDate(d.toISOString().substring(0, 10));
+                }}
+              >
+                Next Mon
+              </button>
+            </div>
+            {deadlineDate && (
+              <button
+                type="button"
+                className="things-clear-date"
+                onClick={() => setDeadlineDate("")}
+              >
+                Clear
+              </button>
             )}
           </div>
-        </>
+        </div>
       )}
     </form>
   );
