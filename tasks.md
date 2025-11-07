@@ -2,7 +2,7 @@
 
 ## Frontend
 
-- [] f1 - Use '<https://fonts.google.com/icons>' Material icon to replace emojis like calendar, pencil,
+- [x] f1 - Use '<https://fonts.google.com/icons>' Material icon to replace emojis like calendar, pencil,
 - [] f2 - Remove the "PENDING" "COMPLETED" labels on each task
 - [] f3 - Edit mode: Allow user to click the task to enter edit mode, just like when the click the edit pencil
 - [] f4 - Change name 'Home' to 'Inbox' to put tasks that are not assigned to any project

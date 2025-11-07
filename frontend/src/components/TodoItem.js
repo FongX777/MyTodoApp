@@ -272,9 +272,6 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
               <span className="material-icons">folder</span> {getProjectName(todo.project_id)}
             </span>
           )}
-          <span className="todo-chip todo-chip-status">
-            {formatStatus(todo.status)}
-          </span>
           <span
             className={`todo-chip todo-chip-priority ${getPriorityClass(
               todo.priority
