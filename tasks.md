@@ -11,7 +11,7 @@
 - [x] f7 - In 'Upcoming' view, show sections of dates for the next 7 days with weekday names, e.g. 'Monday, June 10', 'Tuesday, June 11', etc. Then put the todos under the corresponding date sections.
 - [x] f8 - Change the upper-left app name from 'AlertingScout' to 'TodoApp'
 - [x] f9 - For now the browser tab title is always 'React App', change it to 'TodoApp'
-- [] f10 - when I double click anyplace inside a todo item (not just the pencil icon), it should enter edit mode
+- [x] f10 - when I double click anyplace inside a todo item (not just the pencil icon), it should enter edit mode
 - [] f11 - Improve the look of the panel 'logbook', instead of a plain list, make it look like a todo card like in other panels
 - [] f12 - The inbox should only show tasks that are not assigned to any project, and if i drag and drop a todo item from inbox to a project, it should be removed from inbox view immediately after the drop, and show a toast notification "Moved to [Project Name]" for 1 seconds at bottom-left corner
 - [] f13 - When I drag and drop a todo item to change its project (e.g., from project 1 to project 2), after the drop, show a small toast notification at the bottom-left corner that says "Moved to [Project Name]" for 1 seconds, and then disappear, and the task should disappear from the current view (because it's now in a different project). If the user is in 'inbox' view, after the drop, the task should disappear from inbox view immediately.

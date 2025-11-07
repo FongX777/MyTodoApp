@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import todoService from "../services/todoService";
 import projectService from "../services/projectService";
+import TodoItem from "../components/TodoItem";
 
 const LogbookPage = () => {
   const [completedTodos, setCompletedTodos] = useState([]);
@@ -40,19 +41,15 @@ const LogbookPage = () => {
     fetchCompletedTodos();
   }, []);
 
-  const getProjectName = (projectId) => {
-    if (!projectId || !projects.length) return null;
-    const project = projects.find((p) => p.id === projectId);
-    return project ? project.name : null;
+  const handleTodoUpdated = (updatedTodo) => {
+    setCompletedTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+    );
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "Recently";
-    const date = new Date(dateString);
-    return (
-      date.toLocaleDateString() +
-      " at " +
-      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  const handleTodoDeleted = (deletedTodoId) => {
+    setCompletedTodos((prevTodos) =>
+      prevTodos.filter((todo) => todo.id !== deletedTodoId)
     );
   };
 
@@ -102,42 +99,24 @@ const LogbookPage = () => {
             <p>No completed tasks yet. Start checking off some todos!</p>
           </div>
         ) : (
-          <div className="logbook-list">
-            {completedTodos.map((todo) => (
-              <div key={todo.id} className="logbook-item">
-                <div className="logbook-item-content">
-                  <div className="logbook-item-header">
-                    <h3 className="logbook-item-title">
-                      {todo.title || "Untitled Task"}
-                    </h3>
-                    <span className="completion-date">
-                      {formatDate(todo.completed_at)}
-                    </span>
-                  </div>
-                  {todo.description && (
-                    <p className="logbook-item-description">
-                      {todo.description}
-                    </p>
-                  )}
-                  <div className="logbook-item-meta">
-                    <span
-                      className={`priority-badge ${todo.priority || "low"}`}
-                    >
-                      {(todo.priority || "Low").charAt(0).toUpperCase() +
-                        (todo.priority || "low").slice(1)}
-                    </span>
-                    {getProjectName(todo.project_id) && (
-                      <span className="project-badge">
-                        {getProjectName(todo.project_id)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="logbook-item-status">
-                  <span className="checkmark">✓</span>
-                </div>
-              </div>
-            ))}
+          <div className="logbook-container">
+            <div className="logbook-header">
+              <h2 className="logbook-title">Completed Tasks</h2>
+              <p className="logbook-subtitle">
+                {completedTodos.length} task{completedTodos.length !== 1 ? 's' : ''} completed
+              </p>
+            </div>
+            <div className="todo-items">
+              {completedTodos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  projects={projects}
+                  onTodoUpdated={handleTodoUpdated}
+                  onTodoDeleted={handleTodoDeleted}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>

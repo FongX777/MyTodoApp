@@ -1610,3 +1610,29 @@ nav a:focus {
   border-bottom: 2px solid #e2e8f0;
 }
 
+/* Logbook Styles */
+.logbook-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.logbook-header {
+  text-align: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.logbook-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 8px 0;
+}
+
+.logbook-subtitle {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
