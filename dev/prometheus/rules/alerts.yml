@@ -9,7 +9,7 @@ groups:
             /
             sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.10
-        for: 5m
+        for: 30s
         labels:
           severity: critical
           priority: P1
@@ -27,7 +27,7 @@ groups:
             /
             sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.05
-        for: 5m
+        for: 1m
         labels:
           severity: high
           priority: P2
@@ -45,7 +45,7 @@ groups:
             /
             sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.20
-        for: 5m
+        for: 1m
         labels:
           severity: high
           priority: P2
@@ -63,7 +63,7 @@ groups:
             /
             sum(rate(request_count_total{service="mytodoapp"}[5m])) by (service)
           ) > 0.10
-        for: 5m
+        for: 1m
         labels:
           severity: medium
           priority: P3
@@ -79,7 +79,7 @@ groups:
           histogram_quantile(0.95, 
             sum(rate(request_duration_seconds_bucket{service="mytodoapp"}[5m])) by (le, service)
           ) > 1.0
-        for: 5m
+        for: 1m
         labels:
           severity: medium
           priority: P3
@@ -95,7 +95,7 @@ groups:
           histogram_quantile(0.95, 
             sum(rate(request_duration_seconds_bucket{service="mytodoapp"}[5m])) by (le, service)
           ) > 2.0
-        for: 5m
+        for: 1m
         labels:
           severity: high
           priority: P2
@@ -109,7 +109,7 @@ groups:
       - alert: P1_API_07_Service_Down
         expr: |
           up{job="mytodoapp"} == 0
-        for: 5m
+        for: 30s
         labels:
           severity: critical
           priority: P1
