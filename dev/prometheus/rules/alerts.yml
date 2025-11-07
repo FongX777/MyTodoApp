@@ -1,29 +1,120 @@
 groups:
-  - name: mytodoapp_alerts
+  - name: mytodoapp_api_alerts
     rules:
-      - alert: HighErrorRate
-        expr: sum(rate(request_count{status=~"5.."}[5m])) / sum(rate(request_count[5m])) > 0.1
+      # P1_API_01 - HTTP 5XX Rate > 10% in 5 minutes
+      - alert: P1_API_01_Critical_Error_Rate
+        expr: |
+          (
+            sum(rate(request_count{service="mytodoapp",status=~"5.."}[5m])) by (service)
+            /
+            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+          ) > 0.10
         for: 5m
         labels:
           severity: critical
+          priority: P1
+          alert_type: API
+          alert_id: "01"
         annotations:
-          summary: "High error rate detected"
-          description: "Error rate is above 10% for 5 minutes (current value: {{ $value }})"
-      
-      - alert: HighLatency
-        expr: histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket[5m])) by (le)) > 1
+          summary: "Critical: High 5XX error rate detected"
+          description: "HTTP 5XX error rate is {{ $value | humanizePercentage }} for service {{ $labels.service }}"
+          
+      # P2_API_02 - HTTP 5XX Rate > 5% in 5 minutes
+      - alert: P2_API_02_High_Error_Rate
+        expr: |
+          (
+            sum(rate(request_count{service="mytodoapp",status=~"5.."}[5m])) by (service)
+            /
+            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+          ) > 0.05
         for: 5m
         labels:
-          severity: warning
+          severity: high
+          priority: P2
+          alert_type: API
+          alert_id: "02"
         annotations:
-          summary: "High latency detected"
-          description: "P99 latency is above 1 second for 5 minutes (current value: {{ $value }})"
-      
-      - alert: HighCPU
-        expr: process_cpu_seconds_total > 0.6
+          summary: "High 5XX error rate detected"
+          description: "HTTP 5XX error rate is {{ $value | humanizePercentage }} for service {{ $labels.service }}"
+
+      # P2_API_03 - HTTP 4XX Rate > 20% in 5 minutes
+      - alert: P2_API_03_High_Client_Error_Rate
+        expr: |
+          (
+            sum(rate(request_count{service="mytodoapp",status=~"4.."}[5m])) by (service)
+            /
+            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+          ) > 0.20
         for: 5m
         labels:
-          severity: warning
+          severity: high
+          priority: P2
+          alert_type: API
+          alert_id: "03"
         annotations:
-          summary: "High CPU usage detected"
-          description: "CPU usage is above 60% for 5 minutes (current value: {{ $value }})"
+          summary: "High 4XX error rate detected"
+          description: "HTTP 4XX error rate is {{ $value | humanizePercentage }} for service {{ $labels.service }}"
+
+      # P3_API_04 - HTTP 4XX Rate > 10% in 5 minutes
+      - alert: P3_API_04_Medium_Client_Error_Rate
+        expr: |
+          (
+            sum(rate(request_count{service="mytodoapp",status=~"4.."}[5m])) by (service)
+            /
+            sum(rate(request_count{service="mytodoapp"}[5m])) by (service)
+          ) > 0.10
+        for: 5m
+        labels:
+          severity: medium
+          priority: P3
+          alert_type: API
+          alert_id: "04"
+        annotations:
+          summary: "Medium 4XX error rate detected"
+          description: "HTTP 4XX error rate is {{ $value | humanizePercentage }} for service {{ $labels.service }}"
+
+      # P3_API_05 - p95 Response Time > 1s in 5 minutes
+      - alert: P3_API_05_High_P95_Latency
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(request_duration_seconds_bucket{service="mytodoapp"}[5m])) by (le, service)
+          ) > 1.0
+        for: 5m
+        labels:
+          severity: medium
+          priority: P3
+          alert_type: API
+          alert_id: "05"
+        annotations:
+          summary: "High P95 response time detected"
+          description: "P95 response time is {{ $value }}s for service {{ $labels.service }}"
+
+      # P2_API_06 - p95 Response Time > 2s in 5 minutes
+      - alert: P2_API_06_Critical_P95_Latency
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(request_duration_seconds_bucket{service="mytodoapp"}[5m])) by (le, service)
+          ) > 2.0
+        for: 5m
+        labels:
+          severity: high
+          priority: P2
+          alert_type: API
+          alert_id: "06"
+        annotations:
+          summary: "Critical P95 response time detected"
+          description: "P95 response time is {{ $value }}s for service {{ $labels.service }}"
+
+      # P1_API_07 - Endpoints Unhealthy for more than 5 minutes (/healthz)
+      - alert: P1_API_07_Service_Down
+        expr: |
+          up{job="mytodoapp"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          priority: P1
+          alert_type: API
+          alert_id: "07"
+        annotations:
+          summary: "Critical: Service is down"
+          description: "Service {{ $labels.job }} is unreachable for more than 5 minutes"
