@@ -242,6 +242,8 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
             className={`todo-title ${
               todo.status === "completed" ? "completed" : ""
             }`}
+            onClick={handleEdit}
+            style={{ cursor: "pointer" }}
           >
             {todo.title || "Untitled Task"}
           </h3>
@@ -259,7 +261,11 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
               className="todo-action-btn delete-btn"
               title="Delete task"
             >
-              {isDeleting ? "..." : <span className="material-icons">delete</span>}
+              {isDeleting ? (
+                "..."
+              ) : (
+                <span className="material-icons">delete</span>
+              )}
             </button>
           </div>
         </div>
@@ -269,7 +275,8 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
         <div className="todo-meta">
           {getProjectName(todo.project_id) && (
             <span className="todo-chip todo-chip-project">
-              <span className="material-icons">folder</span> {getProjectName(todo.project_id)}
+              <span className="material-icons">folder</span>{" "}
+              {getProjectName(todo.project_id)}
             </span>
           )}
           <span
@@ -281,7 +288,8 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
           </span>
           {todo.deadline_at && (
             <span className="todo-chip todo-chip-deadline" title="Deadline">
-              <span className="material-icons">event</span> {new Date(todo.deadline_at).toLocaleDateString()}
+              <span className="material-icons">event</span>{" "}
+              {new Date(todo.deadline_at).toLocaleDateString()}
             </span>
           )}
         </div>

@@ -175,7 +175,8 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
             </span>
           )}
           <span className={`things-chip priority-${priority}`} title="Priority">
-            <span className="material-icons">flag</span> {priority.charAt(0).toUpperCase() + priority.slice(1)}
+            <span className="material-icons">flag</span>{" "}
+            {priority.charAt(0).toUpperCase() + priority.slice(1)}
           </span>
           {deadlineDate && (
             <span className="things-chip" title="Deadline">
