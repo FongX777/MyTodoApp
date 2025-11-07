@@ -16,7 +16,7 @@
 - [x] f12 - The inbox should only show tasks that are not assigned to any project, and if i drag and drop a todo item from inbox to a project, it should be removed from inbox view immediately after the drop, and show a toast notification "Moved to [Project Name]" for 1 seconds at bottom-left corner
 - [x] f13 - When I drag and drop a todo item to change its project (e.g., from project 1 to project 2), after the drop, show a small toast notification at the bottom-left corner that says "Moved to [Project Name]" for 1 seconds, and then disappear, and the task should disappear from the current view (because it's now in a different project). If the user is in 'inbox' view, after the drop, the task should disappear from inbox view immediately.
 - [x] f14 - In Inbox, Today, project view, when I click 'All', show all tasks including completed ones, but the pending tasks should be on top, and completed tasks should be at the bottom.
-- [] f15 - In Project view, users can drag and drop tasks to reorder them within the project. The order should be saved in the backend, and when the user refreshes the page, the order should be preserved. (including backend changes)
+- [x] f15 - In Project view, users can drag and drop tasks to reorder them within the project. The order should be saved in the backend, and when the user refreshes the page, the order should be preserved. (including backend changes)
 
 ## Backend
 
