@@ -60,6 +60,10 @@ function Navigation() {
       if (location.pathname === '/' && full.project_id === null) {
         window.dispatchEvent(new CustomEvent('todo-moved-from-inbox'));
       }
+      // Trigger refresh for current project view if moving from one project to another
+      else if (location.pathname.startsWith('/project/') && full.project_id !== newProjectId) {
+        window.dispatchEvent(new CustomEvent('todo-moved-from-project'));
+      }
       
       // Stay on current view after drag and drop
     } catch (error) {

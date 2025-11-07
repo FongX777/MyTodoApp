@@ -41,6 +41,20 @@ const ProjectPage = () => {
     }
   };
 
+  // Listen for todo moves from project to refresh the list
+  useEffect(() => {
+    const handleTodoMovedFromProject = () => {
+      if (todoListRef.current && todoListRef.current.refreshTodos) {
+        todoListRef.current.refreshTodos();
+      }
+    };
+
+    window.addEventListener('todo-moved-from-project', handleTodoMovedFromProject);
+    return () => {
+      window.removeEventListener('todo-moved-from-project', handleTodoMovedFromProject);
+    };
+  }, []);
+
   if (loading) {
     return (
       <>
