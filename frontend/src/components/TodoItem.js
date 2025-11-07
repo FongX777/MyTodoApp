@@ -221,6 +221,8 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
       onDragStart={(e) => {
         e.dataTransfer.setData("text/plain", todo.id.toString());
       }}
+      onDoubleClick={handleEdit}
+      style={{ cursor: "pointer" }}
     >
       <label className="todo-check-container">
         <input
@@ -229,6 +231,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
           onChange={handleToggleComplete}
           className="todo-checkbox"
           disabled={isUpdating}
+          onDoubleClick={(e) => e.stopPropagation()}
           aria-label={
             todo.status === "completed"
               ? "Mark task as pending"
@@ -250,6 +253,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
           <div className="todo-actions">
             <button
               onClick={handleEdit}
+              onDoubleClick={(e) => e.stopPropagation()}
               className="todo-action-btn edit-btn"
               title="Edit task"
             >
@@ -257,6 +261,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
             </button>
             <button
               onClick={handleDelete}
+              onDoubleClick={(e) => e.stopPropagation()}
               disabled={isDeleting}
               className="todo-action-btn delete-btn"
               title="Delete task"

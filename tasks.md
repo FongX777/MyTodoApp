@@ -23,3 +23,4 @@
 - [] b1 - Able to use FastAPI's built-in swagger to render `/docs`, and add documentation for each endpoint
 - [] b2 - use this grafna dashboard json to create a dashboard for backendfastapi metrics: <https://grafana.com/grafana/dashboards/16110-fastapi-observability/>
   - [] b2.1 - metrics: <https://github.com/prometheus/client_python>
+- [] b3 - write a script to periodically (every 24 hours) call apis to test the backend performance and availability, and log the results to a file for monitoring purposes.
