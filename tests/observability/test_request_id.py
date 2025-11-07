@@ -1,11 +1,18 @@
 import pytest
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 import re
 import uuid
+import sys
+import os
+
+# Set testing flag before imports
+os.environ["TESTING"] = "1"
+
+# Add project root to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.app.middleware.request_id import (
-    RequestIDMiddleware,
     add_request_id_middleware,
     get_request_id,
     REQUEST_ID_HEADER_KEY,

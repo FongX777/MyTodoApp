@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from ..models.project import Project
 from ..schemas.project import ProjectCreate
 
@@ -21,10 +22,11 @@ def create_project(db: Session, project: ProjectCreate):
 
 def update_project(db: Session, project_id: int, project: ProjectCreate):
     db_project = db.query(Project).filter(Project.id == project_id).first()
-    if db_project:
-        db_project.name = project.name
-        db_project.description = project.description
-        db_project.status = project.status
-        db.commit()
-        db.refresh(db_project)
+    if not db_project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    db_project.name = project.name
+    db_project.description = project.description
+    db_project.status = project.status
+    db.commit()
+    db.refresh(db_project)
     return db_project

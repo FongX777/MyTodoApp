@@ -14,13 +14,18 @@ Base = declarative_base()
 
 def ensure_completed_at_column():
     """Ensure the todos table has completed_at column (idempotent)."""
+    # Skip migration during testing
+    if os.getenv("TESTING") == "1" or "pytest" in os.getenv("_", ""):
+        return
+    
     with engine.connect() as conn:
         try:
             conn.execute(text("ALTER TABLE todos ADD COLUMN IF NOT EXISTS completed_at TIMESTAMP NULL"))
+            conn.commit()
         except Exception as e:
             # Log but don't crash app startup
             print(f"[migration] Could not ensure completed_at column: {e}")
 
 
-# Attempt lightweight migration on import
+# Attempt lightweight migration on import (skip in test environment)
 ensure_completed_at_column()

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import repository
 from ..database import SessionLocal
@@ -47,6 +47,20 @@ def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return todos
 
 
+@router.put("/todos/reorder")
+def update_todo_orders_endpoint(orders: TodoOrdersUpdate, db: Session = Depends(get_db)):
+    """
+    Update the order of multiple todos within a project.
+
+    - **todo_orders**: List of todo IDs with their new order values
+
+    Use this endpoint to reorder todos by drag-and-drop in the UI.
+    Returns success message after updating orders.
+    """
+    todo_orders = [{"id": order.id, "order": order.order} for order in orders.todo_orders]
+    return repository.todo_repo.update_todo_orders(db=db, todo_orders=todo_orders)
+
+
 @router.get("/todos/{todo_id}", response_model=Todo)
 def read_todo(todo_id: int, db: Session = Depends(get_db)):
     """
@@ -57,6 +71,8 @@ def read_todo(todo_id: int, db: Session = Depends(get_db)):
     Returns the todo if found, otherwise raises 404.
     """
     db_todo = repository.todo_repo.get_todo(db, todo_id=todo_id)
+    if db_todo is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
     return db_todo
 
 
@@ -84,17 +100,3 @@ def delete_todo_endpoint(todo_id: int, db: Session = Depends(get_db)):
     """
     repository.todo_repo.delete_todo(db=db, todo_id=todo_id)
     return {"message": "Todo deleted successfully"}
-
-
-@router.put("/todos/reorder")
-def update_todo_orders_endpoint(orders: TodoOrdersUpdate, db: Session = Depends(get_db)):
-    """
-    Update the order of multiple todos within a project.
-
-    - **todo_orders**: List of todo IDs with their new order values
-
-    Use this endpoint to reorder todos by drag-and-drop in the UI.
-    Returns success message after updating orders.
-    """
-    todo_orders = [{"id": order.id, "order": order.order} for order in orders.todo_orders]
-    return repository.todo_repo.update_todo_orders(db=db, todo_orders=todo_orders)

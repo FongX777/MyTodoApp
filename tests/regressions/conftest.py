@@ -14,6 +14,9 @@ from sqlalchemy.pool import StaticPool
 import sys
 import os
 
+# Set testing flag before imports
+os.environ["TESTING"] = "1"
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.app.main import app

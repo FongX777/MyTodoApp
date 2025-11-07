@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import repository
 from ..database import SessionLocal
@@ -53,6 +53,8 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
     Returns the project if found, otherwise raises 404.
     """
     db_project = repository.project_repo.get_project(db, project_id=project_id)
+    if db_project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
     return db_project
 
 

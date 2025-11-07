@@ -31,7 +31,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -113,7 +113,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "sum(rate(prometheus_http_requests_total[5m])) by (endpoint)",
@@ -129,7 +129,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -212,7 +212,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "histogram_quantile(0.95, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
@@ -224,7 +224,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
@@ -241,7 +241,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -322,7 +322,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "sum(rate(prometheus_http_requests_total[5m])) by (status)",
@@ -338,7 +338,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -415,7 +415,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "sum(rate(prometheus_http_requests_total[5m])) by (method, endpoint)",
@@ -431,7 +431,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -478,7 +478,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "sum(prometheus_http_requests_total)",
@@ -495,7 +495,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "PBFA97CFB590B2093"
+                "uid": "prometheus"
             },
             "fieldConfig": {
                 "defaults": {
@@ -547,7 +547,7 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
+                        "uid": "prometheus"
                     },
                     "editorMode": "builder",
                     "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le))",

@@ -8,6 +8,7 @@ from .metrics import setup_metrics
 from .logging_config import setup_logging, setup_request_logging
 import time
 import logging
+import os
 
 # Initialize structured logging
 setup_logging(service_name="mytodoapp-api")
@@ -16,6 +17,11 @@ logger = logging.getLogger(__name__)
 
 def create_tables_with_retry(max_retries=30, delay=1):
     """Try to create tables with retries to wait for database to be ready"""
+    # Skip database setup during testing
+    if os.getenv("TESTING") == "1":
+        logger.info("Skipping database setup in test mode")
+        return
+    
     for attempt in range(max_retries):
         try:
             # Create database tables

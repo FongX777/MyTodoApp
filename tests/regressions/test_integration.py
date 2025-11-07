@@ -1,11 +1,16 @@
 """
 Simple API integration tests to verify endpoints work correctly.
 
-Run with: python -m pytest tests/regressions/test_integration.py -v
+These tests require the backend service to be running at http://localhost:8000
+
+Run with: python -m pytest tests/regressions/test_integration.py -v -m integration
 """
 
+import pytest
 import requests
 import time
+
+pytestmark = pytest.mark.integration
 
 BASE_URL = "http://localhost:8000"
 
