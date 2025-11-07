@@ -116,9 +116,9 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (handler)",
+                    "expr": "sum(rate(request_count_total[5m])) by (endpoint)",
                     "interval": "",
-                    "legendFormat": "{{handler}}",
+                    "legendFormat": "{{endpoint}}",
                     "range": true,
                     "refId": "A"
                 }
@@ -215,9 +215,9 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "histogram_quantile(0.95, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, handler))",
+                    "expr": "histogram_quantile(0.95, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
                     "interval": "",
-                    "legendFormat": "p95 - {{handler}}",
+                    "legendFormat": "p95 - {{endpoint}}",
                     "range": true,
                     "refId": "A"
                 },
@@ -227,10 +227,10 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, handler))",
+                    "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
                     "hide": false,
                     "interval": "",
-                    "legendFormat": "p99 - {{handler}}",
+                    "legendFormat": "p99 - {{endpoint}}",
                     "range": true,
                     "refId": "B"
                 }
@@ -325,9 +325,9 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (code)",
+                    "expr": "sum(rate(request_count_total[5m])) by (status, endpoint)",
                     "interval": "",
-                    "legendFormat": "{{code}}",
+                    "legendFormat": "{{status}} - {{endpoint}}",
                     "range": true,
                     "refId": "A"
                 }
@@ -418,9 +418,9 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (method, handler)",
+                    "expr": "sum(rate(request_count_total[5m])) by (method, endpoint)",
                     "interval": "",
-                    "legendFormat": "{{method}} {{handler}}",
+                    "legendFormat": "{{method}} {{endpoint}}",
                     "range": true,
                     "refId": "A"
                 }
@@ -481,7 +481,7 @@
                         "uid": "prometheus"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(prometheus_http_requests_total)",
+                    "expr": "sum(request_count_total)",
                     "instant": true,
                     "interval": "",
                     "legendFormat": "Total Requests",

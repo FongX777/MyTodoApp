@@ -8,7 +8,7 @@ from elasticsearch import Elasticsearch
 
 
 # Mark test as xfail until the full stack is available
-@pytest.mark.xfail(reason="Full observability stack not yet running")
+@pytest.mark.skip(reason="Full observability stack not yet running")
 def test_request_metrics_and_logs_correlation():
     """
     End-to-end test that:
@@ -44,7 +44,7 @@ def test_request_metrics_and_logs_correlation():
         # Query Prometheus to see if our request was counted
         prom_response = httpx.get(
             f"{prometheus_url}/api/v1/query",
-            params={"query": 'request_count{endpoint="/todos",method="GET"}'},
+            params={"query": 'request_count_total{endpoint="/todos",method="GET"}'},
             timeout=5.0,
         )
 
@@ -69,18 +69,38 @@ def test_request_metrics_and_logs_correlation():
 
         for attempt in range(max_retries):
             try:
-                # Search for logs with our request_id
-                result = es.search(index="alertingscout-logs-*", body={"query": {"match": {"trace.id": request_id}}})
+                # Prefer query DSL via 'query' parameter; fall back to body if needed
+                # Some ES versions / proxies reject body for simple GET with certain headers (media_type_header_exception)
+                result = es.search(
+                    index="mytodoapp-*",
+                    query={"match": {"trace.id": request_id}},  # uses GET with ?query DSL in recent client versions
+                )
 
-                # Check if we found matching logs
-                if result["hits"]["total"]["value"] > 0:
+                total = result.get("hits", {}).get("total", {}).get("value", 0)
+                if total > 0:
                     found_log = True
                     break
 
             except Exception as e:
-                print(f"Elasticsearch search attempt {attempt + 1} failed: {str(e)}")
+                # Retry with explicit JSON body if first method fails due to compatibility issues
+                if "media_type_header_exception" in str(e):
+                    try:
+                        result = es.search(
+                            index="mytodoapp-*",
+                            body={"query": {"match": {"trace.id": request_id}}},
+                        )
+                        total = result.get("hits", {}).get("total", {}).get("value", 0)
+                        if total > 0:
+                            found_log = True
+                            break
+                    except Exception as inner:
+                        print(
+                            f"Elasticsearch compatibility retry (attempt {attempt + 1}) failed: {inner}"  # noqa: E501
+                        )
+                else:
+                    print(f"Elasticsearch search attempt {attempt + 1} failed: {e}")
 
-            if attempt < max_retries - 1:
+            if not found_log and attempt < max_retries - 1:
                 print(f"Waiting for logs to be indexed (attempt {attempt + 1}/{max_retries})")
                 time.sleep(retry_delay)
 

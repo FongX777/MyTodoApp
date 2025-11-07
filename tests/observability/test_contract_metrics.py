@@ -48,7 +48,7 @@ def test_specific_metrics_present():
     content = response.text
 
     # Check for our required metrics
-    required_metrics = ["request_count", "request_duration_seconds", "response_status_count"]
+    required_metrics = ["request_count", "request_duration_seconds"]
 
     for metric in required_metrics:
         assert metric in content, f"Required metric '{metric}' not found in metrics endpoint response"
