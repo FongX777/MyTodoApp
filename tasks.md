@@ -20,9 +20,9 @@
 
 ## Backend
 
- - [x] b1 - Write a comprehensive API testing suite using pytest to cover all endpoints, including edge cases and error handling in tests/regressions/test_**.py
+- [x] b1 - Write a comprehensive API testing suite using pytest to cover all endpoints, including edge cases and error handling in tests/regressions/test_**.py
 - [x] b2 - Able to use FastAPI's built-in swagger to render `/docs`, and add documentation for each endpoint
- - [x] b3 - write a script to periodically (every 24 hours) call apis to test the backend performance and availability, and log the results to a file for monitoring purposes.
+- [x] b3 - write a script to periodically (every 24 hours) call apis to test the backend performance and availability, and log the results to a file for monitoring purposes.
 - [x] b4 - make sure prometheus scraping endpoint `/metrics` is working correctly and expose useful metrics like request count, error count, latency, etc.
 - [x] b5 - make sure grafana dashboard is set up to visualize the prometheus metrics for easy monitoring of backend health and performance.
-- [] b6 - make sure elasticsearch is properly integrated with the backend for logging and search functionalities, and test its performance under load.
+- [x] b6 - make sure elasticsearch is properly integrated with the backend for logging and search functionalities, and test its performance under load.

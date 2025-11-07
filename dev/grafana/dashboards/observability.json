@@ -31,7 +31,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -113,10 +113,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(request_count[5m])) by (endpoint)",
+                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (endpoint)",
                     "interval": "",
                     "legendFormat": "{{endpoint}}",
                     "range": true,
@@ -129,7 +129,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -212,10 +212,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "histogram_quantile(0.95, sum(rate(request_duration_seconds_bucket[5m])) by (le, endpoint))",
+                    "expr": "histogram_quantile(0.95, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
                     "interval": "",
                     "legendFormat": "p95 - {{endpoint}}",
                     "range": true,
@@ -224,10 +224,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket[5m])) by (le, endpoint))",
+                    "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le, endpoint))",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "p99 - {{endpoint}}",
@@ -241,7 +241,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -322,10 +322,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(request_count[5m])) by (status)",
+                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (status)",
                     "interval": "",
                     "legendFormat": "{{status}}",
                     "range": true,
@@ -338,7 +338,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -415,10 +415,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(rate(request_count[5m])) by (method, endpoint)",
+                    "expr": "sum(rate(prometheus_http_requests_total[5m])) by (method, endpoint)",
                     "interval": "",
                     "legendFormat": "{{method}} {{endpoint}}",
                     "range": true,
@@ -431,7 +431,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -478,10 +478,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "sum(request_count)",
+                    "expr": "sum(prometheus_http_requests_total)",
                     "instant": true,
                     "interval": "",
                     "legendFormat": "Total Requests",
@@ -495,7 +495,7 @@
         {
             "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "PBFA97CFB590B2093"
             },
             "fieldConfig": {
                 "defaults": {
@@ -547,10 +547,10 @@
                 {
                     "datasource": {
                         "type": "prometheus",
-                        "uid": "prometheus"
+                        "uid": "PBFA97CFB590B2093"
                     },
                     "editorMode": "builder",
-                    "expr": "histogram_quantile(0.99, sum(rate(request_duration_seconds_bucket[5m])) by (le))",
+                    "expr": "histogram_quantile(0.99, sum(rate(prometheus_http_request_duration_seconds_bucket[5m])) by (le))",
                     "instant": true,
                     "interval": "",
                     "legendFormat": "p99 Latency",
