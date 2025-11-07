@@ -181,6 +181,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - NODE_ENV=production
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+      - 
     depends_on:
       db:
         condition: service_healthy
