@@ -1,25 +1,43 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+// Prefer environment variable, fallback to same host :8000 (backend) for dev
+const API_URL =
+  process.env.REACT_APP_API_BASE_URL ||
+  `${window.location.protocol}//${window.location.hostname}:8000`;
+
+const client = axios.create({ baseURL: API_URL });
+
+client.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    console.error("API error", {
+      url: err.config && err.config.url,
+      method: err.config && err.config.method,
+      status: err.response && err.response.status,
+      data: err.response && err.response.data,
+    });
+    return Promise.reject(err);
+  }
+);
 
 const getTodos = () => {
-  return axios.get(`${API_URL}/todos`);
+  return client.get(`/todos`);
 };
 
 const createTodo = (todo) => {
-  return axios.post(`${API_URL}/todos`, todo);
+  return client.post(`/todos`, todo);
 };
 
 const getTodo = (id) => {
-  return axios.get(`${API_URL}/todos/${id}`);
+  return client.get(`/todos/${id}`);
 };
 
 const updateTodo = (id, todo) => {
-  return axios.put(`${API_URL}/todos/${id}`, todo);
+  return client.put(`/todos/${id}`, todo);
 };
 
 const deleteTodo = (id) => {
-  return axios.delete(`${API_URL}/todos/${id}`);
+  return client.delete(`/todos/${id}`);
 };
 
 const todoService = {

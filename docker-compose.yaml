@@ -9,10 +9,13 @@ services:
     ports:
       - "8000:8000"
     # 使用 Dockerfile 中的預設命令
+    # Development: make FastAPI reloadable. In production remove command & volume.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/app
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/alertingscout
       - LOG_LEVEL=INFO
       - PYTHONUNBUFFERED=1
+      - FASTAPI_RELOAD=true
     logging:
       driver: "json-file"
       options:
@@ -25,6 +28,8 @@ services:
     restart: unless-stopped
     networks:
       - observability-network
+    volumes:
+      - ./backend/app:/app/app:rw
     depends_on:
       db:
         condition: service_healthy

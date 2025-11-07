@@ -10,6 +10,12 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
   const [editPriority, setEditPriority] = useState(todo.priority || "low");
   const [editProjectId, setEditProjectId] = useState(todo.project_id || "");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deadlineDate, setDeadlineDate] = useState(
+    todo.deadline_at
+      ? new Date(todo.deadline_at).toISOString().substring(0, 10)
+      : ""
+  );
+  const [pendingCompleteDelay, setPendingCompleteDelay] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const getPriorityClass = (priority) => {
@@ -43,10 +49,25 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
     setEditDescription(todo.description || "");
     setEditPriority(todo.priority || "low");
     setEditProjectId(todo.project_id || "");
+    setDeadlineDate(
+      todo.deadline_at
+        ? new Date(todo.deadline_at).toISOString().substring(0, 10)
+        : ""
+    );
   };
 
   const handleSaveEdit = async () => {
     if (!editTitle.trim()) return;
+    // Validate deadline not in past
+    if (deadlineDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const chosen = new Date(deadlineDate);
+      if (chosen < today) {
+        alert("Deadline cannot be in the past.");
+        return;
+      }
+    }
 
     setIsUpdating(true);
     try {
@@ -56,6 +77,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
         description: editDescription.trim(),
         priority: editPriority,
         project_id: editProjectId ? parseInt(editProjectId) : null,
+        deadline_at: deadlineDate ? new Date(deadlineDate).toISOString() : null,
       });
 
       if (onTodoUpdated) {
@@ -92,34 +114,19 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
     const newStatus = todo.status === "completed" ? "pending" : "completed";
     setIsUpdating(true);
     try {
-      const updateData = {
+      const response = await todoService.updateTodo(todo.id, {
         ...todo,
         status: newStatus,
-        completed_at:
-          newStatus === "completed" ? new Date().toISOString() : null,
-      };
-      const response = await todoService.updateTodo(todo.id, updateData);
-
+      });
       if (newStatus === "completed") {
-        // Add fade out animation
-        const todoElement = document.querySelector(
-          `[data-todo-id="${todo.id}"]`
-        );
-        if (todoElement) {
-          todoElement.style.transition = "opacity 0.5s ease-out";
-          todoElement.style.opacity = "0.3";
-
-          // Hide the todo after 0.5 seconds
-          setTimeout(() => {
-            if (onTodoUpdated) {
-              onTodoUpdated({ ...response.data, hidden: true });
-            }
-          }, 500);
-        }
+        // Mark local delay so checkbox shows immediately but parent list update waits 1s
+        setPendingCompleteDelay(true);
+        setTimeout(() => {
+          setPendingCompleteDelay(false);
+          if (onTodoUpdated) onTodoUpdated(response.data);
+        }, 1000);
       } else {
-        if (onTodoUpdated) {
-          onTodoUpdated(response.data);
-        }
+        if (onTodoUpdated) onTodoUpdated(response.data);
       }
     } catch (error) {
       console.error("Error updating todo status:", error);
@@ -175,6 +182,16 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
                 ))}
               </select>
             </div>
+            <div className="edit-field">
+              <label>Deadline</label>
+              <input
+                type="date"
+                value={deadlineDate}
+                onChange={(e) => setDeadlineDate(e.target.value)}
+                className="edit-date-input"
+                min={new Date().toISOString().substring(0, 10)}
+              />
+            </div>
           </div>
           <div className="edit-actions">
             <button
@@ -208,7 +225,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
       <label className="todo-check-container">
         <input
           type="checkbox"
-          checked={todo.status === "completed"}
+          checked={todo.status === "completed" || pendingCompleteDelay}
           onChange={handleToggleComplete}
           className="todo-checkbox"
           disabled={isUpdating}
@@ -265,6 +282,11 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
           >
             {formatPriority(todo.priority)}
           </span>
+          {todo.deadline_at && (
+            <span className="todo-chip todo-chip-deadline" title="Deadline">
+              📅 {new Date(todo.deadline_at).toLocaleDateString()}
+            </span>
+          )}
         </div>
       </div>
     </article>

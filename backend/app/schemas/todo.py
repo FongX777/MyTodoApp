@@ -12,6 +12,7 @@ class TodoBase(BaseModel):
     status: Optional[str] = "pending"
     order: Optional[int] = None
     project_id: Optional[int] = None
+    completed_at: Optional[datetime] = None
 
     @field_validator("status")
     def normalize_status(cls, v: Optional[str]) -> Optional[str]:

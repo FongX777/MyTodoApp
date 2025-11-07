@@ -22,6 +22,10 @@ const AddProjectForm = ({ onProjectAdded, onCancel }) => {
       if (onProjectAdded) {
         onProjectAdded(newProject.data);
       }
+      // Dispatch custom event so other components (AddTodoForm) can update immediately
+      window.dispatchEvent(
+        new CustomEvent("project:created", { detail: newProject.data })
+      );
     } catch (error) {
       console.error("Error creating project:", error);
     } finally {

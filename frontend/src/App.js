@@ -5,6 +5,7 @@ import {
   Routes,
   Link,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import TodayPage from "./pages/TodayPage";
@@ -17,6 +18,7 @@ import AddProjectForm from "./components/AddProjectForm";
 
 function Navigation() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -43,9 +45,12 @@ function Navigation() {
 
   const handleTodoDrop = async (todoId, newProjectId) => {
     try {
-      await todoService.updateTodo(todoId, { project_id: newProjectId });
-      // Force refresh of todos after project change
-      window.location.reload();
+      const existing = await todoService.getTodo(todoId);
+      const full = existing.data;
+      const payload = { ...full, project_id: newProjectId };
+      await todoService.updateTodo(todoId, payload);
+      // Client-side navigate instead of full reload to avoid nginx 404
+      navigate(`/project/${newProjectId}`);
     } catch (error) {
       console.error("Error updating todo project:", error);
     }

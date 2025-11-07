@@ -15,6 +15,7 @@ class Todo(Base):
     status = Column(Enum("pending", "completed", "cancelled", name="todo_status_enum"))
     order = Column(Integer)
     project_id = Column(Integer, ForeignKey("projects.id"))
+    completed_at = Column(DateTime, nullable=True)
 
     project = relationship("Project", back_populates="todos")
     tags = relationship("Tag", secondary="todo_tags", back_populates="todos")

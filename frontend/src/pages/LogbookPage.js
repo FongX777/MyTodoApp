@@ -21,8 +21,8 @@ const LogbookPage = () => {
         const completed = todosResponse.data
           .filter((todo) => todo.status === "completed")
           .sort((a, b) => {
-            const dateA = new Date(a.completed_at || a.updated_at);
-            const dateB = new Date(b.completed_at || b.updated_at);
+            const dateA = new Date(a.completed_at || 0);
+            const dateB = new Date(b.completed_at || 0);
             return dateB - dateA; // Most recent first
           });
 
@@ -111,7 +111,7 @@ const LogbookPage = () => {
                       {todo.title || "Untitled Task"}
                     </h3>
                     <span className="completion-date">
-                      {formatDate(todo.completed_at || todo.updated_at)}
+                      {formatDate(todo.completed_at)}
                     </span>
                   </div>
                   {todo.description && (

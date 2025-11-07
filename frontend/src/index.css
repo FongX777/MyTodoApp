@@ -278,6 +278,331 @@ nav a::before {
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
+/* Deadline picker enhancements */
+.deadline-group .deadline-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.deadline-group .deadline-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.deadline-group input[type="date"] {
+  padding-left: 40px;
+}
+
+.clear-deadline-btn {
+  position: absolute;
+  right: 10px;
+  background: #edf2f7;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.clear-deadline-btn:hover {
+  background: #e2e8f0;
+}
+
+/* Things3 inspired add todo form */
+.things-add-todo {
+  border: 2px dashed #cbd5e0;
+  border-radius: 18px;
+  padding: 20px 24px 28px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: -apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  position: relative;
+}
+
+.things-input, .things-textarea {
+  width: 100%;
+  border: 1px solid #94a3b8;
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 18px;
+  background: #ffffff;
+  font-weight: 500;
+  color: #1e293b;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.things-input::placeholder, .things-textarea::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.things-input:focus, .things-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+}
+
+.things-title-input {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.things-textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.4;
+}
+
+.things-action-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.things-primary-btn {
+  background: #3b82f6;
+  color: #fff;
+  border: 1px solid #1e3a8a;
+  font-size: 16px;
+  padding: 12px 28px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: .3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.08);
+  transition: background .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+.things-primary-btn:hover:not(:disabled) {
+  background: #2563eb;
+  box-shadow: 0 4px 10px rgba(0,0,0,.12);
+}
+
+.things-primary-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+.things-primary-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.things-icon-group {
+  display: flex;
+  gap: 10px;
+}
+
+.things-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #94a3b8;
+  background: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  position: relative;
+}
+
+.things-icon-btn:hover {
+  background: #bae6fd;
+  border-color: #60a5fa;
+}
+
+.things-icon-btn.active {
+  background: #93c5fd;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.25);
+}
+
+.things-popovers {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 40;
+}
+
+.things-popover {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 12px 14px 14px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  animation: popIn .18s ease;
+}
+
+@keyframes popIn { from { opacity:0; transform: translateY(4px);} to { opacity:1; transform: translateY(0);} }
+
+.things-popover-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.things-popover-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.things-popover-item {
+  width: 100%;
+  text-align: left;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.things-popover-item:hover {
+  background: #e2e8f0;
+}
+
+.things-popover-item.selected {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e3a8a;
+}
+
+.things-popover-empty {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.things-popover-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.things-inline-date {
+  border: 1px solid #94a3b8;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.things-inline-date:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,.25);
+}
+
+.things-clear-date {
+  align-self: flex-start;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.things-clear-date:hover {
+  background: #e2e8f0;
+}
+
+/* Overlay for popovers */
+.things-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  animation: overlayFade .2s ease;
+  z-index: 30;
+}
+
+@keyframes overlayFade { from { opacity:0;} to { opacity:1; } }
+
+/* Selected chips */
+.things-selected-chips {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.things-chip {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.things-chip.priority-low { border-color: #10b981; }
+.things-chip.priority-medium { border-color: #f59e0b; }
+.things-chip.priority-high { border-color: #ef4444; }
+.things-chip.priority-urgent { border-color: #dc2626; background:#fee2e2; }
+
+/* Keyboard focus highlight inside popover */
+.things-popover-item.kbd-focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Icon button pop animation */
+.things-icon-btn.active {
+  animation: iconPop .18s ease;
+}
+
+@keyframes iconPop { from { transform: scale(.85); opacity:.6;} to { transform: scale(1); opacity:1;} }
+
+/* Date shortcuts */
+.things-date-shortcuts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.things-date-shortcuts button {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.things-date-shortcuts button:hover {
+  background: #e2e8f0;
+}
+
 .btn {
   background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
   color: #ffffff;
