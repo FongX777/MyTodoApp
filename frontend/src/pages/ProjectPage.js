@@ -49,9 +49,15 @@ const ProjectPage = () => {
       }
     };
 
-    window.addEventListener('todo-moved-from-project', handleTodoMovedFromProject);
+    window.addEventListener(
+      "todo-moved-from-project",
+      handleTodoMovedFromProject
+    );
     return () => {
-      window.removeEventListener('todo-moved-from-project', handleTodoMovedFromProject);
+      window.removeEventListener(
+        "todo-moved-from-project",
+        handleTodoMovedFromProject
+      );
     };
   }, []);
 

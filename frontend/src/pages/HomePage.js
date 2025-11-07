@@ -28,9 +28,12 @@ const HomePage = () => {
       }
     };
 
-    window.addEventListener('todo-moved-from-inbox', handleTodoMovedFromInbox);
+    window.addEventListener("todo-moved-from-inbox", handleTodoMovedFromInbox);
     return () => {
-      window.removeEventListener('todo-moved-from-inbox', handleTodoMovedFromInbox);
+      window.removeEventListener(
+        "todo-moved-from-inbox",
+        handleTodoMovedFromInbox
+      );
     };
   }, []);
 
@@ -42,8 +45,8 @@ const HomePage = () => {
       </div>
       <div className="content-body">
         <AddTodoForm onTodoAdded={handleTodoAdded} />
-        <TodoList 
-          ref={todoListRef} 
+        <TodoList
+          ref={todoListRef}
           customFilter={inboxFilter}
           key={refreshKey}
         />

@@ -73,6 +73,6 @@ def update_todo_orders(db: Session, todo_orders: list[dict]):
         db_todo = db.query(Todo).filter(Todo.id == todo_order["id"]).first()
         if db_todo:
             db_todo.order = todo_order["order"]  # type: ignore[attr-defined]
-    
+
     db.commit()
     return {"message": "Todo orders updated successfully"}

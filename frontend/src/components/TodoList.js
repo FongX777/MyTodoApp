@@ -229,21 +229,24 @@ const TodoList = forwardRef(
                   <Fragment key={todo.id}>
                     {/* Drop zone before each item */}
                     <div
-                      className={`drop-zone ${dropIndex === index ? 'drop-active' : ''}`}
+                      className={`drop-zone ${
+                        dropIndex === index ? "drop-active" : ""
+                      }`}
                       onDragOver={(e) => handleDragOver(e, index)}
                       onDragLeave={handleDragLeave}
                       onDrop={(e) => handleDrop(e, index)}
                       style={{
-                        height: dropIndex === index ? '4px' : '2px',
-                        backgroundColor: dropIndex === index ? '#007bff' : 'transparent',
-                        margin: '2px 0',
-                        transition: 'all 0.2s ease'
+                        height: dropIndex === index ? "4px" : "2px",
+                        backgroundColor:
+                          dropIndex === index ? "#007bff" : "transparent",
+                        margin: "2px 0",
+                        transition: "all 0.2s ease",
                       }}
                     />
                     <div
                       draggable={true}
                       onDragStart={() => handleDragStart(todo)}
-                      style={{ cursor: draggedTodo ? 'grabbing' : 'grab' }}
+                      style={{ cursor: draggedTodo ? "grabbing" : "grab" }}
                     >
                       <TodoItem
                         todo={todo}
@@ -256,15 +259,20 @@ const TodoList = forwardRef(
                 ))}
                 {/* Drop zone at the end */}
                 <div
-                  className={`drop-zone ${dropIndex === sortedTodos.length ? 'drop-active' : ''}`}
+                  className={`drop-zone ${
+                    dropIndex === sortedTodos.length ? "drop-active" : ""
+                  }`}
                   onDragOver={(e) => handleDragOver(e, sortedTodos.length)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, sortedTodos.length)}
                   style={{
-                    height: dropIndex === sortedTodos.length ? '4px' : '2px',
-                    backgroundColor: dropIndex === sortedTodos.length ? '#007bff' : 'transparent',
-                    margin: '2px 0',
-                    transition: 'all 0.2s ease'
+                    height: dropIndex === sortedTodos.length ? "4px" : "2px",
+                    backgroundColor:
+                      dropIndex === sortedTodos.length
+                        ? "#007bff"
+                        : "transparent",
+                    margin: "2px 0",
+                    transition: "all 0.2s ease",
                   }}
                 />
               </>

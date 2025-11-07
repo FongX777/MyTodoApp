@@ -103,7 +103,8 @@ const LogbookPage = () => {
             <div className="logbook-header">
               <h2 className="logbook-title">Completed Tasks</h2>
               <p className="logbook-subtitle">
-                {completedTodos.length} task{completedTodos.length !== 1 ? 's' : ''} completed
+                {completedTodos.length} task
+                {completedTodos.length !== 1 ? "s" : ""} completed
               </p>
             </div>
             <div className="todo-items">

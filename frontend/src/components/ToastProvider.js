@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 let toastId = 0;
 
@@ -10,18 +10,18 @@ export const ToastProvider = ({ children }) => {
   const showToast = (message, duration = 1000) => {
     const id = ++toastId;
     const toast = { id, message, duration };
-    
-    setToasts(prev => [...prev, toast]);
-    
+
+    setToasts((prev) => [...prev, toast]);
+
     setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
+      setToasts((prev) => prev.filter((t) => t.id !== id));
     }, duration);
-    
+
     return id;
   };
 
   const removeToast = (id) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
   return (
@@ -37,7 +37,7 @@ const ToastContainer = ({ toasts }) => {
 
   return (
     <div className="toast-container">
-      {toasts.map(toast => (
+      {toasts.map((toast) => (
         <div key={toast.id} className="toast">
           {toast.message}
         </div>
@@ -49,7 +49,7 @@ const ToastContainer = ({ toasts }) => {
 export const useToast = () => {
   const context = React.useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
 };

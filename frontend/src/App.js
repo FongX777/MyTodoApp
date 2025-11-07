@@ -51,20 +51,24 @@ function Navigation() {
       const full = existing.data;
       const payload = { ...full, project_id: newProjectId };
       await todoService.updateTodo(todoId, payload);
-      
+
       // Show toast notification
-      const projectName = projects.find(p => p.id === newProjectId)?.name || 'Project';
+      const projectName =
+        projects.find((p) => p.id === newProjectId)?.name || "Project";
       showToast(`Moved to ${projectName}`);
-      
+
       // Trigger refresh for inbox view if moving from inbox
-      if (location.pathname === '/' && full.project_id === null) {
-        window.dispatchEvent(new CustomEvent('todo-moved-from-inbox'));
+      if (location.pathname === "/" && full.project_id === null) {
+        window.dispatchEvent(new CustomEvent("todo-moved-from-inbox"));
       }
       // Trigger refresh for current project view if moving from one project to another
-      else if (location.pathname.startsWith('/project/') && full.project_id !== newProjectId) {
-        window.dispatchEvent(new CustomEvent('todo-moved-from-project'));
+      else if (
+        location.pathname.startsWith("/project/") &&
+        full.project_id !== newProjectId
+      ) {
+        window.dispatchEvent(new CustomEvent("todo-moved-from-project"));
       }
-      
+
       // Stay on current view after drag and drop
     } catch (error) {
       console.error("Error updating todo project:", error);
