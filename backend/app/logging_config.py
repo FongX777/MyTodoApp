@@ -7,7 +7,7 @@ import logging
 import os
 import socket
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Union
 
 from fastapi import FastAPI, Request
@@ -25,7 +25,7 @@ class JSONLogFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """Format the log record as a JSON string."""
         log_data = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "service": getattr(record, "service", "mytodoapp"),
             "level": record.levelname,
             "message": record.getMessage(),
@@ -167,7 +167,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process the request and log request information."""
         # Get start time
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
 
         # Extract request_id from request state (set by RequestIDMiddleware)
         request_id = getattr(request.state, "request_id", None)
@@ -196,7 +196,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
 
             # Calculate duration
-            duration_ms = (datetime.utcnow() - start_time).total_seconds() * 1000
+            duration_ms = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
 
             # Log request completion
             logger.info(
@@ -215,7 +215,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         except Exception as exc:
             # Calculate duration
-            duration_ms = (datetime.utcnow() - start_time).total_seconds() * 1000
+            duration_ms = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
 
             # Log exception
             logger.exception(

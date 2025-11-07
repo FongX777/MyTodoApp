@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from ..models.todo import Todo
-from datetime import datetime
+from datetime import datetime, timezone
 
 # NOTE: SQLAlchemy model attributes are dynamically instrumented; static type
 # checkers may flag direct assignment. These are valid runtime operations.
@@ -50,7 +50,7 @@ def update_todo(db: Session, todo_id: int, todo: TodoCreate):
     db_todo.project_id = todo.project_id  # type: ignore[attr-defined]
     # Auto timestamp completed_at when transitioning to completed; clear if leaving
     if prev_status != "completed" and todo.status == "completed" and not db_todo.completed_at:  # type: ignore[attr-defined]
-        db_todo.completed_at = datetime.utcnow()  # type: ignore[attr-defined]
+        db_todo.completed_at = datetime.now(timezone.utc)  # type: ignore[attr-defined]
     elif todo.status != "completed":
         db_todo.completed_at = None  # type: ignore[attr-defined]
     db.commit()

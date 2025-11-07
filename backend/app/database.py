@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
 # Get the DATABASE_URL from the environment or use the default
@@ -17,7 +16,7 @@ def ensure_completed_at_column():
     # Skip migration during testing
     if os.getenv("TESTING") == "1" or "pytest" in os.getenv("_", ""):
         return
-    
+
     with engine.connect() as conn:
         try:
             conn.execute(text("ALTER TABLE todos ADD COLUMN IF NOT EXISTS completed_at TIMESTAMP NULL"))
