@@ -126,6 +126,19 @@ const TodoList = forwardRef(
       );
     });
 
+    // Sort todos - when viewing "All", pending tasks should be on top, completed at bottom
+    const sortedTodos = [...filteredTodos].sort((a, b) => {
+      if (statusFilter === "all") {
+        // Pending tasks first, completed tasks last
+        if (a.status === "completed" && b.status !== "completed") return 1;
+        if (a.status !== "completed" && b.status === "completed") return -1;
+        // Within same status, maintain original order by id
+        return a.id - b.id;
+      }
+      // For other filters, maintain original order
+      return a.id - b.id;
+    });
+
     const completedCount = baseTodos.filter(
       (todo) => todo.status === "completed"
     ).length;
@@ -194,7 +207,7 @@ const TodoList = forwardRef(
             </div>
           )}
         </div>
-        {filteredTodos.length === 0 ? (
+        {sortedTodos.length === 0 ? (
           <div className="empty-state">
             <p>
               {filterByProject
@@ -204,7 +217,7 @@ const TodoList = forwardRef(
           </div>
         ) : (
           <div className="todo-items">
-            {filteredTodos.map((todo) => (
+            {sortedTodos.map((todo) => (
               <TodoItem
                 key={todo.id}
                 todo={todo}
