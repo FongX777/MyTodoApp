@@ -1,0 +1,16 @@
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alertmanager@mytodoapp.com'
+  
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'n8n-webhook'
+
+receivers:
+  - name: 'n8n-webhook'
+    webhook_configs:
+      - url: 'http://n8n:5678/webhook/fc2d4921-6f3a-4e07-badd-febc467655fd'
+        send_resolved: true

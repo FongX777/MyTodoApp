@@ -75,10 +75,23 @@ services:
       - "9090:9090"
     volumes:
       - ./dev/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./dev/prometheus/rules:/etc/prometheus/rules
     networks:
       - observability-network
     depends_on:
       - backend
+  
+  # Alertmanager for handling alerts
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./dev/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - observability-network
+    depends_on:
+      - prometheus
   
   # Grafana for metrics visualization
   grafana:
@@ -103,10 +116,12 @@ services:
       - "9200:9200"
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
+      - ELASTIC_PASSWORD=password
+      - xpack.security.authc.api_key.enabled=true
       - cluster.routing.allocation.disk.threshold_enabled=false
       - cluster.routing.allocation.disk.watermark.low=95%
       - cluster.routing.allocation.disk.watermark.high=96%
@@ -116,7 +131,7 @@ services:
     networks:
       - observability-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200/_cat/health"]
+      test: ["CMD", "curl", "-u", "elastic:password", "-f", "http://localhost:9200/_cat/health"]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -130,6 +145,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_SERVICEACCOUNTTOKEN=${KIBANA_SERVICE_TOKEN:-}
       - SERVER_NAME=kibana
       - SERVER_PUBLICBASEURL=http://localhost:5601
     networks:
@@ -137,12 +153,6 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
 
 # Filebeat for shipping logs to Elasticsearch
   filebeat:

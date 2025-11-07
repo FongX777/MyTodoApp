@@ -92,7 +92,7 @@ setup_request_logging(app)
 # Setup Prometheus metrics endpoint and middleware
 setup_metrics(
     app,
-    service_name="mytodoapp-api",
+    service_name="mytodoapp",
     endpoint_path="/metrics",
     exclude_paths=["/metrics", "/", "/docs", "/redoc", "/openapi.json"],
 )
