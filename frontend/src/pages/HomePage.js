@@ -19,7 +19,7 @@ const HomePage = () => {
   return (
     <>
       <div className="content-header">
-        <h1 className="page-title">Home</h1>
+        <h1 className="page-title">Inbox</h1>
         <p className="page-subtitle">Manage your tasks efficiently</p>
       </div>
       <div className="content-body">

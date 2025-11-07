@@ -83,7 +83,7 @@ function Navigation() {
         <ul>
           <li>
             <Link to="/" className={location.pathname === "/" ? "active" : ""}>
-              Home
+              Inbox
             </Link>
           </li>
           <li>
