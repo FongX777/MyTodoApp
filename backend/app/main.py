@@ -108,15 +108,13 @@ def read_root():
     logger.debug("This is a debug message from the root endpoint")
     logger.info("Root endpoint accessed")
     logger.warning("This is a warning message from the root endpoint")
-
-    # Every 5th request will generate an error log
-    import random
-
-    if random.random() < 0.2:
-        try:
-            # Intentionally cause an error for demonstration
-            1 / 0
-        except Exception as e:
-            logger.error(f"Simulated error in root endpoint: {str(e)}")
-
     return {"Hello": "World", "Logs": "Check Elasticsearch/Kibana for logs"}
+
+
+@app.get("/healthz")
+def health_check():
+    # Log messages of different levels to demonstrate Elasticsearch integration
+    logger.debug("This is a debug message from the health check endpoint")
+    logger.info("Health check endpoint accessed")
+    logger.warning("This is a warning message from the health check endpoint")
+    return {"status": "healthy", "Logs": "Check Elasticsearch/Kibana for logs"}

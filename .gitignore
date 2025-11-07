@@ -21,3 +21,6 @@ yarn-error.log
 
 # Environment
 .env
+
+
+.pytest_cache/
