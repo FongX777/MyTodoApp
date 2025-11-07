@@ -8,6 +8,7 @@ import React, {
 import todoService from "../services/todoService";
 import projectService from "../services/projectService";
 import TodoItem from "./TodoItem";
+import { useToast } from "./ToastProvider";
 
 // Re-ordered so that Active is first (default), Completed second, All rightmost
 const FILTERS = [
@@ -35,6 +36,7 @@ const TodoList = forwardRef(
     const [searchTerm, setSearchTerm] = useState("");
     const [draggedTodo, setDraggedTodo] = useState(null);
     const [dropIndex, setDropIndex] = useState(null);
+    const { showToast } = useToast();
 
     const isProjectView = filterByProject !== undefined;
 
@@ -85,6 +87,49 @@ const TodoList = forwardRef(
         });
       },
     }));
+
+    // Drag and drop handlers for reordering within project view
+    const handleDragStart = (todo) => {
+      setDraggedTodo(todo);
+    };
+
+    const handleDragOver = (e, index) => {
+      e.preventDefault();
+      setDropIndex(index);
+    };
+
+    const handleDragLeave = (e) => {
+      // Only clear if we're leaving the drop zone itself
+      if (e.currentTarget === e.target) {
+        setDropIndex(null);
+      }
+    };
+
+    const handleDrop = async (e, index) => {
+      e.preventDefault();
+      setDropIndex(null);
+
+      if (!draggedTodo) return;
+
+      // Reorder logic for project view
+      const oldIndex = sortedTodos.findIndex((t) => t.id === draggedTodo.id);
+      if (oldIndex === -1 || oldIndex === index) {
+        setDraggedTodo(null);
+        return;
+      }
+
+      // Update local state optimistically
+      const newTodos = [...sortedTodos];
+      newTodos.splice(oldIndex, 1);
+      newTodos.splice(index, 0, draggedTodo);
+
+      setTodos(newTodos);
+      showToast("Task reordered");
+      setDraggedTodo(null);
+
+      // TODO: If backend supports order field, update it here
+      // For now, just show toast and update local state
+    };
 
     if (loading) {
       return <div className="loading">Loading todos...</div>;

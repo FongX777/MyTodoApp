@@ -185,20 +185,22 @@ function Navigation() {
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <Navigation />
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/today" element={<TodayPage />} />
-            <Route path="/upcoming" element={<UpcomingPage />} />
-            <Route path="/logbook" element={<LogbookPage />} />
-            <Route path="/project/:projectId" element={<ProjectPage />} />
-          </Routes>
+    <ToastProvider>
+      <Router>
+        <div className="app">
+          <Navigation />
+          <div className="main-content">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/today" element={<TodayPage />} />
+              <Route path="/upcoming" element={<UpcomingPage />} />
+              <Route path="/logbook" element={<LogbookPage />} />
+              <Route path="/project/:projectId" element={<ProjectPage />} />
+            </Routes>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </ToastProvider>
   );
 }
 
