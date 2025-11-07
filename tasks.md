@@ -9,8 +9,8 @@
 - [x] f5 - When a pending task is checked to be completed, change wait to 0.3s to disappear the task, so user can see the checkmark animation
 - [x] f6 - Bugfix: when drag and drop a todo to different projects, it'll jump to the project, don't do the jump, stay in the current view
 - [x] f7 - In 'Upcoming' view, show sections of dates for the next 7 days with weekday names, e.g. 'Monday, June 10', 'Tuesday, June 11', etc. Then put the todos under the corresponding date sections.
-- [] f8 - Change the upper-left app name from 'AlertingScout' to 'TodoApp'
-- [] f9 - For now the browser tab title is always 'React App', change it to 'TodoApp'
+- [x] f8 - Change the upper-left app name from 'AlertingScout' to 'TodoApp'
+- [x] f9 - For now the browser tab title is always 'React App', change it to 'TodoApp'
 
 ## Backend
 
