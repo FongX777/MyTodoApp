@@ -1,5 +1,7 @@
 #!/bin/bash
-# Load test script for AlertingScout API
+#!/bin/bash
+# Load test script for MyTodoApp API
+# Uses wrk to generate concurrent requests
 
 # Configuration
 API_URL=${API_URL:-"http://localhost:8000"}
@@ -25,8 +27,10 @@ fi
 RESULTS_DIR="./results_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$RESULTS_DIR"
 
-echo "===== AlertingScout API Load Test ====="
-echo "API URL: $API_URL"
+fi
+
+echo "===== MyTodoApp API Load Test ====="
+echo "Target: $API_BASE_URL"
 echo "Duration: $DURATION"
 echo "Connections: $CONNECTIONS"
 echo "Threads: $THREADS"

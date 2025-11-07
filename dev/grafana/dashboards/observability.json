@@ -591,8 +591,8 @@
         ]
     },
     "timezone": "",
-    "title": "AlertingScout API Monitoring",
-    "uid": "alertingscout-api",
+    "title": "MyTodoApp API Monitoring",
+    "uid": "mytodoapp-api",
     "version": 1,
     "weekStart": ""
 }

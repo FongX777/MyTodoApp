@@ -1,5 +1,5 @@
 groups:
-  - name: alertingscout_alerts
+  - name: mytodoapp_alerts
     rules:
       - alert: HighErrorRate
         expr: sum(rate(request_count{status=~"5.."}[5m])) / sum(rate(request_count[5m])) > 0.1

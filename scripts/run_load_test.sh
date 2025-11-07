@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Starting load test for AlertingScout API..."
+echo "Starting load test for MyTodoApp API..."
 echo "This will generate metrics for Prometheus and logs for the ELK stack."
 
 # 設置默認參數

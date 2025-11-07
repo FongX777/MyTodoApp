@@ -82,7 +82,7 @@ pytest tests/observability/test_e2e_metrics_logs.py -v
 To run load tests:
 
 ```bash
-cd specs/003-improve-observability-prometheus/load-tests
+cd dev/load-tests
 ./run_wrk.sh
 ```
 
@@ -91,7 +91,7 @@ cd specs/003-improve-observability-prometheus/load-tests
 To test alerting rules:
 
 ```bash
-cd specs/003-improve-observability-prometheus/alert-testing
+cd dev/alert-testing
 ./trigger_error_spike.sh
 ```
 

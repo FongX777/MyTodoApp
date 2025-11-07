@@ -1,9 +1,9 @@
 apiVersion: 1
 
 providers:
- - name: 'AlertingScout Dashboards'
+ - name: 'MyTodoApp Dashboards'
    orgId: 1
-   folder: 'AlertingScout'
+   folder: 'MyTodoApp'
    type: file
    disableDeletion: false
    updateIntervalSeconds: 30

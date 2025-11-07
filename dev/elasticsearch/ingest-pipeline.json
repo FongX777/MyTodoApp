@@ -1,5 +1,5 @@
 {
-    "description": "Process AlertingScout API logs",
+    "description": "Process MyTodoApp API logs",
     "processors": [
         {
             "json": {

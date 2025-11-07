@@ -26,7 +26,7 @@ class JSONLogFormatter(logging.Formatter):
         """Format the log record as a JSON string."""
         log_data = {
             "timestamp": datetime.utcnow().isoformat(),
-            "service": getattr(record, "service", "alertingscout"),
+            "service": getattr(record, "service", "mytodoapp"),
             "level": record.levelname,
             "message": record.getMessage(),
             "logger": record.name,
@@ -233,7 +233,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             raise
 
 
-def setup_logging(service_name: str = "alertingscout") -> None:
+def setup_logging(service_name: str = "mytodoapp") -> None:
     """
     Configure structured JSON logging for the application.
 

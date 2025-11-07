@@ -60,16 +60,16 @@ This file lists actionable, dependency-ordered tasks. Tasks marked with [P] may 
 
 - Goal: Add `prometheus.yml` pointing to `backend:8000` and a Grafana dashboard JSON that visualizes request rate and latency.
 - Files:
-  - `specs/003-improve-observability-prometheus/prometheus/prometheus.yml`
-  - `specs/003-improve-observability-prometheus/grafana/observability.json`
+  - `dev/prometheus/prometheus.yml`
+  - `dev/grafana/observability.json`
 - Acceptance: Grafana dashboard loads and shows Prometheus metrics after compose up.
 
 [X] T022 - Elasticsearch ingest pipeline & index template
 
 - Goal: Provide ingest pipeline and index template to map `request_id`, `service`, `project_id` as keywords.
 - Files:
-  - `specs/003-improve-observability-prometheus/elasticsearch/ingest-pipeline.json`
-  - `specs/003-improve-observability-prometheus/elasticsearch/index-template.json`
+  - `dev/elasticsearch/ingest-pipeline.json`
+  - `dev/elasticsearch/index-template.json`
 - Acceptance: On indexing logs, fields appear with correct types in Kibana.
 
 [X] T030 [P] - E2E integration test: request -> metrics & logs
@@ -81,19 +81,19 @@ This file lists actionable, dependency-ordered tasks. Tasks marked with [P] may 
 [X] T031 - Load test and performance validation
 
 - Goal: Run a lightweight load test (wrk/locust) to measure p99 latency and CPU overhead.
-- Files: `specs/003-improve-observability-prometheus/load-tests/README.md` and an example script `specs/003-improve-observability-prometheus/load-tests/run_wrk.sh`
+- Files: `dev/load-tests/README.md` and an example script `dev/load-tests/run_wrk.sh`
 - Acceptance: p99 < 1s and instrumentation overhead <3% CPU / <5ms median latency. If not met, adjust sampling/labels.
 
 [X] T032 - Alerting smoke test
 
 - Goal: Simulate 5xx spike and verify Prometheus alert rule triggers (using a local Alertmanager or webhook stub).
-- File: `specs/003-improve-observability-prometheus/alert-testing/trigger_error_spike.sh`
+- File: `dev/alert-testing/trigger_error_spike.sh`
 - Acceptance: Alert rule for 5xx > 10% for 5m transitions to firing state in Alertmanager (or local stub receives webhook).
 
 [X] T040 - Update quickstart & runbook
 
 - Goal: Finalize `quickstart.md` with exact compose commands, env vars, troubleshooting, and how to query Prometheus/Grafana/Kibana.
-- File: `specs/003-improve-observability-prometheus/quickstart.md` (update)
+- File: `dev/quickstart.md` (update)
 - Acceptance: A developer can run `docker compose -f docker-compose.observability.yml up --build` and see Grafana/Prometheus/Kibana up and data flowing.
 
 Parallel groups

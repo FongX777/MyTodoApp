@@ -1,12 +1,12 @@
 {
     "index_patterns": [
-        "alertingscout-logs-*"
+        "mytodoapp-logs-*"
     ],
     "template": {
         "settings": {
             "number_of_shards": 1,
             "number_of_replicas": 0,
-            "index.lifecycle.name": "alertingscout-logs-policy"
+            "index.lifecycle.name": "mytodoapp-logs-policy"
         },
         "mappings": {
             "properties": {
@@ -91,6 +91,6 @@
     },
     "priority": 100,
     "_meta": {
-        "description": "Template for AlertingScout logs"
+        "description": "Template for MyTodoApp logs"
     }
 }

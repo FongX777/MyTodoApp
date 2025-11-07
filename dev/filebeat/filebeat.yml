@@ -29,16 +29,16 @@ processors:
   - add_fields:
       target: service
       fields:
-        name: "alertingscout"
+        name: "mytodoapp"
         environment: "development"
 
 # Elasticsearch output
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
   indices:
-    - index: "alertingscout-%{+yyyy.MM.dd}"
+    - index: "mytodoapp-%{+yyyy.MM.dd}"
       when.contains:
-        service.name: "alertingscout"
+        service.name: "mytodoapp"
 
 # Enable monitoring
 monitoring:

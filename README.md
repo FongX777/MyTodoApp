@@ -1,6 +1,6 @@
-# AlertingScout
+# MyTodoApp
 
-AlertingScout is a task management application with integrated observability features, allowing you to track tasks and monitor system performance.
+MyTodoApp is a task management application with integrated observability features, allowing you to track tasks and monitor system performance.
 
 ## Getting Started
 

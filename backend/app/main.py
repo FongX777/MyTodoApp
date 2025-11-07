@@ -10,7 +10,7 @@ import time
 import logging
 
 # Initialize structured logging
-setup_logging(service_name="alertingscout-api")
+setup_logging(service_name="mytodoapp-api")
 logger = logging.getLogger(__name__)
 
 
@@ -58,7 +58,7 @@ setup_request_logging(app)
 # Setup Prometheus metrics endpoint and middleware
 setup_metrics(
     app,
-    service_name="alertingscout-api",
+    service_name="mytodoapp-api",
     endpoint_path="/metrics",
     exclude_paths=["/metrics", "/", "/docs", "/redoc", "/openapi.json"],
 )

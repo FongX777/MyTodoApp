@@ -375,7 +375,7 @@ class ApiLoadTest:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Load testing tool for AlertingScout API")
+    parser = argparse.ArgumentParser(description="Load testing tool for MyTodoApp API")
     parser.add_argument("duration", nargs="?", type=int, default=5, help="Test duration in minutes (default: 5)")
     parser.add_argument(
         "interval", nargs="?", type=float, default=0.5, help="Request interval in seconds (default: 0.5)"
