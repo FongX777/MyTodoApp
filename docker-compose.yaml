@@ -81,6 +81,18 @@ services:
     depends_on:
       - backend
   
+  # Alertmanager for handling alerts
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./dev/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - observability-network
+    depends_on:
+      - prometheus
+  
   # Grafana for metrics visualization
   grafana:
     image: grafana/grafana:latest
