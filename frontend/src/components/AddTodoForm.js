@@ -169,17 +169,17 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
         <div className="things-selected-chips">
           {selectedProjectId && (
             <span className="things-chip" title="Project selected">
-              🗂{" "}
+              <span className="material-icons">folder</span>{" "}
               {projects.find((p) => p.id === selectedProjectId)?.name ||
                 "Project"}
             </span>
           )}
           <span className={`things-chip priority-${priority}`} title="Priority">
-            ⚑ {priority.charAt(0).toUpperCase() + priority.slice(1)}
+            <span className="material-icons">flag</span> {priority.charAt(0).toUpperCase() + priority.slice(1)}
           </span>
           {deadlineDate && (
             <span className="things-chip" title="Deadline">
-              📅 {deadlineDate}
+              <span className="material-icons">event</span> {deadlineDate}
             </span>
           )}
         </div>
@@ -196,7 +196,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
               title="Select Project"
               aria-label="Select project"
             >
-              🗂
+              <span className="material-icons">folder</span>
             </button>
           )}
           <button
@@ -210,7 +210,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
             title="Set Priority"
             aria-label="Set priority"
           >
-            ⚑
+            <span className="material-icons">flag</span>
           </button>
           <button
             type="button"
@@ -223,7 +223,7 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
             title="Set Deadline"
             aria-label="Set deadline"
           >
-            📅
+            <span className="material-icons">event</span>
           </button>
         </div>
       </div>

@@ -1554,4 +1554,37 @@ nav a:focus {
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
+/* Material Icons */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
+}
+
+.todo-action-btn .material-icons {
+  font-size: 16px;
+}
+
+.things-icon-btn .material-icons {
+  font-size: 20px;
+}
+
+.todo-chip .material-icons {
+  font-size: 14px;
+  vertical-align: text-bottom;
+}
+
+.things-chip .material-icons {
+  font-size: 14px;
+  vertical-align: text-bottom;
+}
 

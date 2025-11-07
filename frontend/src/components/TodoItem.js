@@ -251,7 +251,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
               className="todo-action-btn edit-btn"
               title="Edit task"
             >
-              ✏️
+              <span className="material-icons">edit</span>
             </button>
             <button
               onClick={handleDelete}
@@ -259,7 +259,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
               className="todo-action-btn delete-btn"
               title="Delete task"
             >
-              {isDeleting ? "..." : "🗑️"}
+              {isDeleting ? "..." : <span className="material-icons">delete</span>}
             </button>
           </div>
         </div>
@@ -269,7 +269,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
         <div className="todo-meta">
           {getProjectName(todo.project_id) && (
             <span className="todo-chip todo-chip-project">
-              📁 {getProjectName(todo.project_id)}
+              <span className="material-icons">folder</span> {getProjectName(todo.project_id)}
             </span>
           )}
           <span className="todo-chip todo-chip-status">
@@ -284,7 +284,7 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
           </span>
           {todo.deadline_at && (
             <span className="todo-chip todo-chip-deadline" title="Deadline">
-              📅 {new Date(todo.deadline_at).toLocaleDateString()}
+              <span className="material-icons">event</span> {new Date(todo.deadline_at).toLocaleDateString()}
             </span>
           )}
         </div>
