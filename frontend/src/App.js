@@ -53,9 +53,15 @@ function Navigation() {
       await todoService.updateTodo(todoId, payload);
 
       // Show toast notification
-      const projectName =
-        projects.find((p) => p.id === newProjectId)?.name || "Project";
-      showToast(`Moved to ${projectName}`);
+      let message;
+      if (newProjectId === null) {
+        message = "Moved to Inbox";
+      } else {
+        const projectName =
+          projects.find((p) => p.id === newProjectId)?.name || "Project";
+        message = `Moved to ${projectName}`;
+      }
+      showToast(message);
 
       // Trigger refresh for inbox view if moving from inbox
       if (location.pathname === "/" && full.project_id === null) {
@@ -100,7 +106,12 @@ function Navigation() {
       </div>
       <nav>
         <ul>
-          <li>
+          <li
+            className="drop-zone"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, null)}
+          >
             <Link to="/" className={location.pathname === "/" ? "active" : ""}>
               Inbox
             </Link>

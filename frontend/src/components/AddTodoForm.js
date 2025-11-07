@@ -99,17 +99,6 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
 
     setIsSubmitting(true);
     try {
-      // Prevent past date submission (defensive in case browser bypass)
-      if (deadlineDate) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const chosen = new Date(deadlineDate);
-        if (chosen < today) {
-          alert("Deadline cannot be in the past.");
-          setIsSubmitting(false);
-          return;
-        }
-      }
       const todoData = {
         title: title.trim(),
         priority,
@@ -323,7 +312,6 @@ const AddTodoForm = ({ onTodoAdded, defaultProjectId }) => {
                     type="date"
                     value={deadlineDate}
                     onChange={(e) => setDeadlineDate(e.target.value)}
-                    min={todayStr}
                     className="things-inline-date"
                   />
                   <div className="things-date-shortcuts">

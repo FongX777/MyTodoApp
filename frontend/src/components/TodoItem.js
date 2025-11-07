@@ -58,16 +58,6 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
 
   const handleSaveEdit = async () => {
     if (!editTitle.trim()) return;
-    // Validate deadline not in past
-    if (deadlineDate) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const chosen = new Date(deadlineDate);
-      if (chosen < today) {
-        alert("Deadline cannot be in the past.");
-        return;
-      }
-    }
 
     setIsUpdating(true);
     try {
@@ -189,7 +179,6 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
                 className="edit-date-input"
-                min={new Date().toISOString().substring(0, 10)}
               />
             </div>
           </div>
