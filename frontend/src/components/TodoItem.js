@@ -119,12 +119,12 @@ const TodoItem = ({ todo, onTodoUpdated, onTodoDeleted, projects = [] }) => {
         status: newStatus,
       });
       if (newStatus === "completed") {
-        // Mark local delay so checkbox shows immediately but parent list update waits 1s
+        // Mark local delay so checkbox shows immediately but parent list update waits 0.3s
         setPendingCompleteDelay(true);
         setTimeout(() => {
           setPendingCompleteDelay(false);
           if (onTodoUpdated) onTodoUpdated(response.data);
-        }, 1000);
+        }, 300);
       } else {
         if (onTodoUpdated) onTodoUpdated(response.data);
       }
