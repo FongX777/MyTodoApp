@@ -38,9 +38,10 @@ dev: ## Start all services with Docker Compose
 	@echo "Frontend: http://localhost:3001"
 	@echo "Backend:  http://localhost:8000"
 	@echo "API Docs: http://localhost:8000/docs"
-	@echo "Grafana：http://localhost:3000"
+	@echo "API Healthcheck: http://localhost:8000/healthz"
+	@echo "Grafana：http://localhost:3000 (admin/admin)"
 	@echo "Prometheus：http://localhost:9090"
-	@echo "Kibana：http://localhost:5601"
+	@echo "Kibana：http://localhost:5601 (elastic/password)"
 
 .PHONY: dev-observability
 dev-observability: ## Start with full observability stack
