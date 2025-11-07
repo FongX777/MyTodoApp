@@ -19,7 +19,7 @@ def get_db():
 def create_todo_endpoint(todo: TodoCreate, db: Session = Depends(get_db)):
     """
     Create a new todo item.
-    
+
     - **title**: Title of the todo (required)
     - **description**: Detailed description
     - **priority**: Priority level (low, medium, high)
@@ -37,10 +37,10 @@ def create_todo_endpoint(todo: TodoCreate, db: Session = Depends(get_db)):
 def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retrieve all todos with optional pagination.
-    
+
     - **skip**: Number of todos to skip (default: 0)
     - **limit**: Maximum number of todos to return (default: 100)
-    
+
     Returns a list of all todos ordered by creation time.
     """
     todos = repository.todo_repo.get_todos(db, skip=skip, limit=limit)
@@ -51,9 +51,9 @@ def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def read_todo(todo_id: int, db: Session = Depends(get_db)):
     """
     Retrieve a specific todo by ID.
-    
+
     - **todo_id**: The ID of the todo to retrieve
-    
+
     Returns the todo if found, otherwise raises 404.
     """
     db_todo = repository.todo_repo.get_todo(db, todo_id=todo_id)
@@ -64,10 +64,10 @@ def read_todo(todo_id: int, db: Session = Depends(get_db)):
 def update_todo_endpoint(todo_id: int, todo: TodoCreate, db: Session = Depends(get_db)):
     """
     Update an existing todo.
-    
+
     - **todo_id**: The ID of the todo to update
     - **todo**: Updated todo data
-    
+
     Returns the updated todo if found, otherwise raises 404.
     """
     return repository.todo_repo.update_todo(db=db, todo_id=todo_id, todo=todo)
@@ -77,9 +77,9 @@ def update_todo_endpoint(todo_id: int, todo: TodoCreate, db: Session = Depends(g
 def delete_todo_endpoint(todo_id: int, db: Session = Depends(get_db)):
     """
     Delete a todo by ID.
-    
+
     - **todo_id**: The ID of the todo to delete
-    
+
     Returns success message if deleted, otherwise raises 404.
     """
     repository.todo_repo.delete_todo(db=db, todo_id=todo_id)
@@ -90,9 +90,9 @@ def delete_todo_endpoint(todo_id: int, db: Session = Depends(get_db)):
 def update_todo_orders_endpoint(orders: TodoOrdersUpdate, db: Session = Depends(get_db)):
     """
     Update the order of multiple todos within a project.
-    
+
     - **todo_orders**: List of todo IDs with their new order values
-    
+
     Use this endpoint to reorder todos by drag-and-drop in the UI.
     Returns success message after updating orders.
     """
