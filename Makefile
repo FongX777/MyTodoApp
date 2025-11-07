@@ -40,8 +40,15 @@ dev: ## Start all services with Docker Compose
 	@echo "API Docs: http://localhost:8000/docs"
 	@echo "API Healthcheck: http://localhost:8000/healthz"
 	@echo "Grafana：http://localhost:3000 (admin/admin)"
+	@echo "Elasticsearch：http://localhost:9200 (elastic/password)"
 	@echo "Prometheus：http://localhost:9090"
 	@echo "Kibana：http://localhost:5601 (elastic/password)"
+	@make reset-kibana-password
+
+load_test: ## Load test data into the database
+	@echo "$(BLUE)Loading test data into the database...$(NC)"
+	./scripts/load_test.py
+	@echo "$(GREEN)Test data loaded successfully!$(NC)"
 
 .PHONY: dev-observability
 dev-observability: ## Start with full observability stack
@@ -127,7 +134,24 @@ shell-frontend: ## Open shell in frontend container
 
 .PHONY: shell-db
 shell-db: ## Connect to PostgreSQL database
-	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec db psql -U user -d tododb
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec db psql -U postgres -d mytodoapp
+
+
+
+.PHONY: reset-kibana-password
+reset-kibana-password: # Reset kibana_system password because Kibana by default uses 'kibana_system' user and its initial password is unknowingly random
+	@curl -X POST "http://localhost:9200/_security/user/kibana_system/_password" \
+	-u elastic:password \
+	-H "Content-Type: application/json" \
+	-d '{ "password": "password" }'
+
+.PHONY: install-n8n
+install-n8n: ## Create n8n database and restart n8n service
+	@echo "$(BLUE)Creating n8n database...$(NC)"
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) exec -T db psql -U postgres -c "CREATE DATABASE n8n;"
+	@echo "$(BLUE)Restarting n8n service...$(NC)"
+	export PATH="$(DOCKER_PATH):$$PATH" && docker compose -f $(COMPOSE_FILE) restart n8n
+	@echo "$(GREEN)n8n database created and service restarted!$(NC)"
 
 # Cleanup Commands
 .PHONY: stop

@@ -117,10 +117,11 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=password        # password for 'elastic' user
+      - KIBANA_PASSWORD=password         # password for 'kibana_system' user
       - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - ELASTIC_PASSWORD=password
       - xpack.security.authc.api_key.enabled=true
       - cluster.routing.allocation.disk.threshold_enabled=false
       - cluster.routing.allocation.disk.watermark.low=95%
@@ -144,10 +145,11 @@ services:
       - "5601:5601"
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - ELASTICSEARCH_SERVICEACCOUNTTOKEN=${KIBANA_SERVICE_TOKEN:-}
-      - SERVER_NAME=kibana
-      - SERVER_PUBLICBASEURL=http://localhost:5601
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=password
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=some_long_random_string_for_saved_objects_1234
+      - XPACK_SECURITY_ENCRYPTIONKEY=some_long_random_string_for_security_123456
+      - XPACK_REPORTING_ENCRYPTIONKEY=some_long_random_string_for_reporting_123
     networks:
       - observability-network
     depends_on:

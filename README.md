@@ -14,20 +14,26 @@ cd MyTodoApp
 # 2. Start the application
 make dev
 
-# 3. Install frontend dependencies (in a new terminal)
-make frontend-install
+# 3. Load test data for demonstration purposes
+make load_test
 
 # 4. Access the application
 # Frontend: http://localhost:3001
 # Backend API: http://localhost:8000
 # API docs: http://localhost:8000/docs
+# API metrics: http://localhost:8000/metrics
+# Grafana: http://localhost:3000 (admin/admin)
+
+
+# 5. Install n8n again
+make install-n8n
 ```
 
 ## Prerequisites
 
 - Docker & Docker Compose
-- Node.js (v20 or later) and npm
 - Python 3.12+ (for local development)
+- Node.js (v20 or later) and npm (optional, for frontend development)
 
 ## Development Commands
 
