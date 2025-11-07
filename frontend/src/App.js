@@ -49,8 +49,7 @@ function Navigation() {
       const full = existing.data;
       const payload = { ...full, project_id: newProjectId };
       await todoService.updateTodo(todoId, payload);
-      // Client-side navigate instead of full reload to avoid nginx 404
-      navigate(`/project/${newProjectId}`);
+      // Stay on current view after drag and drop
     } catch (error) {
       console.error("Error updating todo project:", error);
     }
