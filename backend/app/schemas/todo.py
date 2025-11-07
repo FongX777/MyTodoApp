@@ -42,3 +42,12 @@ class Todo(TodoBase):
 
     class Config:
         from_attributes = True
+
+
+class TodoOrderUpdate(BaseModel):
+    id: int
+    order: int
+
+
+class TodoOrdersUpdate(BaseModel):
+    todo_orders: list[TodoOrderUpdate]

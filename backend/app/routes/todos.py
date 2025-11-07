@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from .. import repository
 from ..database import SessionLocal
-from ..schemas.todo import Todo, TodoCreate
+from ..schemas.todo import Todo, TodoCreate, TodoOrdersUpdate
 
 router = APIRouter()
 
@@ -42,3 +42,10 @@ def update_todo_endpoint(todo_id: int, todo: TodoCreate, db: Session = Depends(g
 def delete_todo_endpoint(todo_id: int, db: Session = Depends(get_db)):
     repository.todo_repo.delete_todo(db=db, todo_id=todo_id)
     return {"message": "Todo deleted successfully"}
+
+
+@router.put("/todos/reorder")
+def update_todo_orders_endpoint(orders: TodoOrdersUpdate, db: Session = Depends(get_db)):
+    """Update the order of multiple todos"""
+    todo_orders = [{"id": order.id, "order": order.order} for order in orders.todo_orders]
+    return repository.todo_repo.update_todo_orders(db=db, todo_orders=todo_orders)

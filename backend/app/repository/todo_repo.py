@@ -13,7 +13,7 @@ def get_todo(db: Session, todo_id: int):
 
 
 def get_todos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Todo).offset(skip).limit(limit).all()
+    return db.query(Todo).order_by(Todo.order, Todo.id).offset(skip).limit(limit).all()
 
 
 def create_todo(db: Session, todo: TodoCreate):
@@ -62,3 +62,17 @@ def delete_todo(db: Session, todo_id: int):
         db.delete(db_todo)
         db.commit()
     return db_todo
+
+
+def update_todo_orders(db: Session, todo_orders: list[dict]):
+    """
+    Update the order of multiple todos
+    todo_orders: list of {"id": int, "order": int}
+    """
+    for todo_order in todo_orders:
+        db_todo = db.query(Todo).filter(Todo.id == todo_order["id"]).first()
+        if db_todo:
+            db_todo.order = todo_order["order"]  # type: ignore[attr-defined]
+    
+    db.commit()
+    return {"message": "Todo orders updated successfully"}

@@ -40,12 +40,17 @@ const deleteTodo = (id) => {
   return client.delete(`/todos/${id}`);
 };
 
+const reorderTodos = (todoOrders) => {
+  return client.put(`/todos/reorder`, { todo_orders: todoOrders });
+};
+
 const todoService = {
   getTodos,
   createTodo,
   getTodo,
   updateTodo,
   deleteTodo,
+  reorderTodos,
 };
 
 export default todoService;

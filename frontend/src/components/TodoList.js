@@ -3,6 +3,7 @@ import React, {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  Fragment,
 } from "react";
 import todoService from "../services/todoService";
 import projectService from "../services/projectService";
@@ -32,6 +33,10 @@ const TodoList = forwardRef(
     // Active should be default per new UX requirement
     const [statusFilter, setStatusFilter] = useState(initialStatusFilter);
     const [searchTerm, setSearchTerm] = useState("");
+    const [draggedTodo, setDraggedTodo] = useState(null);
+    const [dropIndex, setDropIndex] = useState(null);
+
+    const isProjectView = filterByProject !== undefined;
 
     const fetchTodos = async () => {
       try {
@@ -217,15 +222,64 @@ const TodoList = forwardRef(
           </div>
         ) : (
           <div className="todo-items">
-            {sortedTodos.map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                projects={projects}
-                onTodoUpdated={handleTodoUpdated}
-                onTodoDeleted={handleTodoDeleted}
-              />
-            ))}
+            {isProjectView ? (
+              // Project view with reordering support
+              <>
+                {sortedTodos.map((todo, index) => (
+                  <Fragment key={todo.id}>
+                    {/* Drop zone before each item */}
+                    <div
+                      className={`drop-zone ${dropIndex === index ? 'drop-active' : ''}`}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, index)}
+                      style={{
+                        height: dropIndex === index ? '4px' : '2px',
+                        backgroundColor: dropIndex === index ? '#007bff' : 'transparent',
+                        margin: '2px 0',
+                        transition: 'all 0.2s ease'
+                      }}
+                    />
+                    <div
+                      draggable={true}
+                      onDragStart={() => handleDragStart(todo)}
+                      style={{ cursor: draggedTodo ? 'grabbing' : 'grab' }}
+                    >
+                      <TodoItem
+                        todo={todo}
+                        projects={projects}
+                        onTodoUpdated={handleTodoUpdated}
+                        onTodoDeleted={handleTodoDeleted}
+                      />
+                    </div>
+                  </Fragment>
+                ))}
+                {/* Drop zone at the end */}
+                <div
+                  className={`drop-zone ${dropIndex === sortedTodos.length ? 'drop-active' : ''}`}
+                  onDragOver={(e) => handleDragOver(e, sortedTodos.length)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, sortedTodos.length)}
+                  style={{
+                    height: dropIndex === sortedTodos.length ? '4px' : '2px',
+                    backgroundColor: dropIndex === sortedTodos.length ? '#007bff' : 'transparent',
+                    margin: '2px 0',
+                    transition: 'all 0.2s ease'
+                  }}
+                />
+              </>
+            ) : (
+              // Other views without reordering
+              sortedTodos.map((todo) => (
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  projects={projects}
+                  onTodoUpdated={handleTodoUpdated}
+                  onTodoDeleted={handleTodoDeleted}
+                />
+              ))
+            )}
           </div>
         )}
       </div>
