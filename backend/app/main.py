@@ -34,7 +34,35 @@ def create_tables_with_retry(max_retries=30, delay=1):
 # Create database tables with retry logic
 create_tables_with_retry()
 
-app = FastAPI()
+app = FastAPI(
+    title="MyTodoApp API",
+    description="""
+    A modern todo list application API with project management capabilities.
+    
+    ## Features
+    
+    * **Todos**: Create, read, update, and delete todo items
+    * **Projects**: Organize todos into projects
+    * **Ordering**: Reorder todos within projects via drag-and-drop
+    * **Scheduling**: Set deadlines and scheduled dates for todos
+    * **Priority Management**: Assign priority levels (low, medium, high)
+    * **Status Tracking**: Track todo completion status
+    
+    ## Observability
+    
+    * Prometheus metrics available at `/metrics`
+    * Structured JSON logging to Elasticsearch
+    * Request tracing with X-Request-ID headers
+    """,
+    version="1.0.0",
+    contact={
+        "name": "MyTodoApp Team",
+        "email": "support@mytodoapp.com",
+    },
+    license_info={
+        "name": "MIT",
+    },
+)
 
 origins = [
     "*"  # Allow all origins for development
