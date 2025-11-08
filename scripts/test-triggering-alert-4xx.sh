@@ -15,6 +15,22 @@ REPORT_FILE="$OUTPUT_DIR/alert_4xx_report_$TIMESTAMP.json"
 RAW_LOG="$OUTPUT_DIR/alert_4xx_raw_$TIMESTAMP.log"
 mkdir -p "$OUTPUT_DIR"
 
+# Portable millisecond epoch helper (prefers python3, falls back to python, then coarse seconds).
+epoch_ms() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
+import time; print(int(time.time()*1000))
+PY
+  elif command -v python >/dev/null 2>&1; then
+    python - <<'PY'
+import time; print(int(time.time()*1000))
+PY
+  else
+    # Fallback: seconds * 1000 (coarse granularity)
+    echo "$(($(date +%s)*1000))"
+  fi
+}
+
 echo "[INFO] Starting 4xx error generation: $QPS QPS for $DURATION_SECONDS s -> $BASE_URL$ENDPOINT"
 
 # Use background jobs to maintain QPS; each second launch QPS curls.
@@ -27,12 +43,13 @@ while true; do
   if [ $elapsed -ge $DURATION_SECONDS ]; then
     break
   fi
-  second_start=$(date +%s%3N)
+  # Start of this second (not used but kept for potential pacing extensions)
+  second_start=$(date +%s)
   for ((i=0;i<QPS;i++)); do
     (
-      t0=$(date +%s%3N)
+      t0=$(epoch_ms)
       code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$ENDPOINT") || true
-      t1=$(date +%s%3N)
+      t1=$(epoch_ms)
       latency_ms=$(( t1 - t0 ))
       echo "{\"ts\":\"$(date -Iseconds)\",\"code\":$code,\"latency_ms\":$latency_ms}" >> "$RAW_LOG"
     ) &

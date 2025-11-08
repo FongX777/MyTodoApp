@@ -15,6 +15,21 @@ REPORT_FILE="$OUTPUT_DIR/alert_5xx_report_$TIMESTAMP.json"
 RAW_LOG="$OUTPUT_DIR/alert_5xx_raw_$TIMESTAMP.log"
 mkdir -p "$OUTPUT_DIR"
 
+# Portable millisecond epoch helper (same as 4xx script)
+epoch_ms() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
+import time; print(int(time.time()*1000))
+PY
+  elif command -v python >/dev/null 2>&1; then
+    python - <<'PY'
+import time; print(int(time.time()*1000))
+PY
+  else
+    echo "$(($(date +%s)*1000))"
+  fi
+}
+
 echo "[INFO] Starting 5xx error generation: $QPS QPS for $DURATION_SECONDS s -> $BASE_URL$ENDPOINT"
 
 start_time=$(date +%s)
@@ -28,9 +43,9 @@ while true; do
   fi
   for ((i=0;i<QPS;i++)); do
     (
-      t0=$(date +%s%3N)
+      t0=$(epoch_ms)
       http_code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$ENDPOINT") || true
-      t1=$(date +%s%3N)
+      t1=$(epoch_ms)
       latency_ms=$(( t1 - t0 ))
       echo "{\"ts\":\"$(date -Iseconds)\",\"code\":$http_code,\"latency_ms\":$latency_ms}" >> "$RAW_LOG"
     ) &
@@ -45,8 +60,12 @@ wait || true
 echo "[INFO] Completed sending $req_count requests. Building report..."
 
 report_json=$(awk 'BEGIN{min=1e9;max=0;sum=0;count=0;fail=0;codes["2xx"]=0;codes["4xx"]=0;codes["5xx"]=0;}{
-  if (match($0, /"code":([0-9]{3})/, m) && match($0, /"latency_ms":([0-9]+)/, l)) {
-    code=m[1]+0; lat=l[1]+0; count++; sum+=lat; if(lat<min)min=lat; if(lat>max)max=lat;
+  # Portable extraction without regex capture arrays (BSD awk compatible)
+  if ($0 ~ /"code":[0-9]{3}/ && $0 ~ /"latency_ms":[0-9]+/) {
+    codeField=$0; sub(/.*"code":/,"",codeField); sub(/[,}].*/,"",codeField);
+    latField=$0; sub(/.*"latency_ms":/,"",latField); sub(/[,}].*/,"",latField);
+    code=codeField+0; lat=latField+0;
+    count++; sum+=lat; if(lat<min)min=lat; if(lat>max)max=lat;
     if(code>=200 && code<300) codes["2xx"]++;
     else if(code>=400 && code<500) codes["4xx"]++;
     else if(code>=500 && code<600) { codes["5xx"]++; fail++; }
