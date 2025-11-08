@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from .routes import todos, projects
-from .models import todo, project, tag
-from .database import engine, SessionLocal, Base
+from .routes import todos, projects, flaky
+
+from .database import engine, Base
 from .middleware.request_id import add_request_id_middleware
 from .metrics import setup_metrics
 from .logging_config import setup_logging, setup_request_logging
@@ -100,6 +100,7 @@ setup_metrics(
 # Include API routers
 app.include_router(todos.router)
 app.include_router(projects.router)
+app.include_router(flaky.router)
 
 
 @app.get("/")
