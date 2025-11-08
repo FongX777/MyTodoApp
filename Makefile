@@ -10,12 +10,6 @@ DOCKER_PATH := /Applications/Docker.app/Contents/Resources/bin
 DOCKER := docker
 DOCKER_COMPOSE := docker compose
 
-# Check if Docker is available in PATH, otherwise use full path
-ifeq ($(shell which docker),)
-    DOCKER := /Applications/Docker.app/Contents/Resources/bin/docker
-    DOCKER_COMPOSE := /Applications/Docker.app/Contents/Resources/bin/docker compose
-endif
-
 # Colors for output
 BLUE := \033[36m
 GREEN := \033[32m
