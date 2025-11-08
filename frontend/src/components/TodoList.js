@@ -43,8 +43,9 @@ const TodoList = forwardRef(
     const fetchTodos = async () => {
       try {
         setLoading(true);
+        // Request larger limit and descending order so newest tasks appear immediately for Inbox / Project views.
         const [todosResponse, projectsResponse] = await Promise.all([
-          todoService.getTodos(),
+          todoService.getTodos({ limit: 200, sort: "desc" }),
           projectService.getProjects(),
         ]);
         setTodos(todosResponse.data);

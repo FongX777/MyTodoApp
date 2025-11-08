@@ -13,8 +13,14 @@ def get_todo(db: Session, todo_id: int):
     return db.query(Todo).filter(Todo.id == todo_id).first()
 
 
-def get_todos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Todo).order_by(Todo.order, Todo.id).offset(skip).limit(limit).all()
+def get_todos(db: Session, skip: int = 0, limit: int = 100, sort: str = "asc"):
+    # Order primary by id to reflect creation order; 'order' is secondary for project-specific display.
+    base_query = db.query(Todo)
+    if sort == "desc":
+        base_query = base_query.order_by(Todo.order.desc(), Todo.id.desc())
+    else:
+        base_query = base_query.order_by(Todo.order, Todo.id)
+    return base_query.offset(skip).limit(limit).all()
 
 
 def create_todo(db: Session, todo: TodoCreate):

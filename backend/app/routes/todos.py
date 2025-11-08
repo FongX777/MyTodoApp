@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from .. import repository
 from ..database import SessionLocal
@@ -34,16 +34,21 @@ def create_todo_endpoint(todo: TodoCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/todos", response_model=list[Todo])
-def read_todos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_todos(
+    skip: int = 0,
+    limit: int = 100,
+    sort: str = Query("asc", description="Sort by creation id: 'asc' or 'desc'"),
+    db: Session = Depends(get_db),
+):
     """
     Retrieve all todos with optional pagination.
 
     - **skip**: Number of todos to skip (default: 0)
     - **limit**: Maximum number of todos to return (default: 100)
 
-    Returns a list of all todos ordered by creation time.
+    Returns a list of todos ordered by id ascending (default) or descending when `sort=desc`.
     """
-    todos = repository.todo_repo.get_todos(db, skip=skip, limit=limit)
+    todos = repository.todo_repo.get_todos(db, skip=skip, limit=limit, sort=sort)
     return todos
 
 

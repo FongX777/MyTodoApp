@@ -20,8 +20,11 @@ client.interceptors.response.use(
   }
 );
 
-const getTodos = () => {
-  return client.get(`/todos`);
+const getTodos = ({ skip = 0, limit = 100, sort = "desc" } = {}) => {
+  // Request newest first by default so recent creations appear without extra single fetch calls.
+  return client.get(`/todos`, {
+    params: { skip, limit, sort },
+  });
 };
 
 const createTodo = (todo) => {
