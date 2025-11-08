@@ -16,15 +16,21 @@ logger = logging.getLogger(__name__)
 
 
 def create_tables_with_retry(max_retries=30, delay=1):
-    """Try to create tables with retries to wait for database to be ready"""
-    # Skip database setup during testing
+    """Create tables, retrying if necessary for external databases.
+
+    In testing mode (using SQLite) we create tables immediately without retries.
+    """
     if os.getenv("TESTING") == "1":
-        logger.info("Skipping database setup in test mode")
+        try:
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database tables created successfully (test mode)")
+        except Exception as e:
+            logger.error(f"Failed to create test database tables: {e}")
+            raise
         return
 
     for attempt in range(max_retries):
         try:
-            # Create database tables
             Base.metadata.create_all(bind=engine)
             logger.info("Database tables created successfully")
             return

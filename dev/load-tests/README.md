@@ -1,6 +1,6 @@
-# Load Testing for AlertingScout
+# Load Testing for MyTodoApp
 
-This directory contains tools and scripts for load testing the AlertingScout API with observability instrumentation enabled.
+This directory contains tools and scripts for load testing the MyTodoApp API with observability instrumentation enabled.
 
 ## Requirements
 

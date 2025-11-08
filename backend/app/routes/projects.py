@@ -15,7 +15,7 @@ def get_db():
         db.close()
 
 
-@router.post("/projects", response_model=Project)
+@router.post("/projects", response_model=Project, status_code=201)
 def create_project_endpoint(project: ProjectCreate, db: Session = Depends(get_db)):
     """
     Create a new project.

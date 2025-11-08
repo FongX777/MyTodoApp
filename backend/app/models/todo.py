@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 from ..database import Base
+from .tag import todo_tags  # Import association table explicitly for SQLAlchemy mapper resolution
 
 
 class Todo(Base):
@@ -18,4 +19,4 @@ class Todo(Base):
     completed_at = Column(DateTime, nullable=True)
 
     project = relationship("Project", back_populates="todos")
-    tags = relationship("Tag", secondary="todo_tags", back_populates="todos")
+    tags = relationship("Tag", secondary=todo_tags, back_populates="todos")

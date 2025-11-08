@@ -1,6 +1,6 @@
 # Observability Tests
 
-This directory contains tests for the observability features of AlertingScout.
+This directory contains tests for the observability features of MyTodoApp.
 
 ## Running Tests
 

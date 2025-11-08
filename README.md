@@ -138,6 +138,18 @@ make test-integration
 make test-all
 ```
 
+### Test Database
+
+Backend tests run against an isolated SQLite database (file `test.db`) to avoid requiring a running Postgres container. This is configured automatically by the test `conftest.py` so you do not need to export any variables manually.
+
+If you want to force tests to use a different database, set `DATABASE_URL` before running `make test`.
+
+```bash
+DATABASE_URL=sqlite:///./another_test.db make test
+```
+
+The application code switches to SQLite whenever the `TESTING=1` environment variable is present and no explicit non-default Postgres URL is provided.
+
 ## Development Workflow
 
 1. **Start development environment:**
