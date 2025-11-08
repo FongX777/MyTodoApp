@@ -15,14 +15,14 @@ def get_db():
         db.close()
 
 
-@router.post("/projects", response_model=Project, status_code=201)
+@router.post("/projects", response_model=Project)
 def create_project_endpoint(project: ProjectCreate, db: Session = Depends(get_db)):
     """
     Create a new project.
 
     - **name**: Name of the project (required)
     - **description**: Project description
-    - **status**: Project status (active, archived)
+    - **status**: Project status (active, completed, cancelled)
 
     Projects are used to organize todos.
     """

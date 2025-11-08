@@ -4,15 +4,26 @@ from enum import Enum
 
 
 class ProjectStatus(str, Enum):
-    undone = "undone"  # maps to DB 'active'
-    done = "done"  # maps to DB 'completed'
-    cancelled = "cancelled"  # passthrough for cancelled state
+    active = "active"
+    completed = "completed"
+    cancelled = "cancelled"
 
 
 class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
-    status: Optional[ProjectStatus] = ProjectStatus.undone
+    status: Optional[ProjectStatus] = ProjectStatus.active
+
+    @field_validator("status", mode="before")
+    def map_incoming_status(cls, v):  # type: ignore[override]
+        """Allow alternative incoming values 'undone'/'done' mapping to DB enum."""
+        mapping = {
+            "undone": ProjectStatus.active,
+            "done": ProjectStatus.completed,
+        }
+        if isinstance(v, str):
+            return mapping.get(v, v)
+        return v
 
 
 class ProjectCreate(ProjectBase):
@@ -22,15 +33,3 @@ class ProjectCreate(ProjectBase):
 class Project(ProjectBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
-
-    @field_validator("status", mode="before")
-    def map_db_status(cls, v):  # type: ignore[override]
-        """Translate DB enum values to API-facing enum values."""
-        mapping = {
-            "active": ProjectStatus.undone,
-            "completed": ProjectStatus.done,
-            "cancelled": ProjectStatus.cancelled,
-        }
-        if isinstance(v, str):
-            return mapping.get(v, v)
-        return v

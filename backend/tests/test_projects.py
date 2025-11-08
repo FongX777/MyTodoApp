@@ -3,15 +3,18 @@ from app.main import app
 
 client = TestClient(app)
 
+
 def test_create_project():
     response = client.post("/projects", json={"name": "Test Project", "status": "undone"})
-    assert response.status_code == 201
+    assert response.status_code == 200
     assert response.json()["name"] == "Test Project"
+
 
 def test_get_projects():
     response = client.get("/projects")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+
 
 def test_get_project():
     # Create a project to get
@@ -20,6 +23,7 @@ def test_get_project():
     response = client.get(f"/projects/{project_id}")
     assert response.status_code == 200
     assert response.json()["id"] == project_id
+
 
 def test_update_project():
     # Create a project to update

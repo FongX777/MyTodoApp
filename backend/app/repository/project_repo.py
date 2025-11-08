@@ -5,16 +5,31 @@ from ..models.project import Project
 from ..schemas.project import ProjectCreate, ProjectStatus
 
 
-def _normalize_status(status: ProjectStatus | None) -> str | None:
-    """Map API/status values to DB enum values."""
+def _normalize_status(status: ProjectStatus | str | None) -> str | None:
+    """Normalize incoming status to canonical DB enum values.
+
+    Accepts:
+    - ProjectStatus enum members (active/completed/cancelled)
+    - String synonyms: 'undone' -> 'active', 'done' -> 'completed'
+    - Already canonical strings ('active','completed','cancelled')
+    Returns None if status is None.
+    """
     if status is None:
         return None
-    mapping = {
-        ProjectStatus.undone: "active",
-        ProjectStatus.done: "completed",
-        ProjectStatus.cancelled: "cancelled",
+    # If it's an enum member, take its value
+    if isinstance(status, ProjectStatus):
+        return status.value
+    # Handle raw string inputs
+    s = status.lower()
+    synonym_map = {
+        "undone": "active",
+        "done": "completed",
+        "active": "active",
+        "completed": "completed",
+        "cancelled": "cancelled",
+        "canceled": "cancelled",  # tolerate US spelling
     }
-    return mapping.get(status, "active")
+    return synonym_map.get(s, "active")
 
 
 def _migrate_legacy_statuses(db: Session):
