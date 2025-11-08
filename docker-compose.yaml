@@ -16,6 +16,7 @@ services:
       - LOG_LEVEL=INFO
       - PYTHONUNBUFFERED=1
       - FASTAPI_RELOAD=true
+      - CORS_ORIGINS=http://localhost:3001
     logging:
       driver: "json-file"
       options:
